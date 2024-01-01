@@ -38,6 +38,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   dropdown_textfield: ^1.0.8
   google_fonts:
+  get:
   intl:
   provider:
   firebase_auth:
@@ -45,9 +46,12 @@ dependencies:
   cloud_firestore: ^4.3.1
   firebase_storage:
   lottie:
+  loading_animation_widget: ^1.2.0+4
+  pinput:
   animated_segmented_tab_control: ^1.0.1
   flutter_rating_bar: ^4.0.1
   syncfusion_flutter_datagrid: ^23.1.38
+  quickalert: ^1.0.2
 
 
 dev_dependencies:

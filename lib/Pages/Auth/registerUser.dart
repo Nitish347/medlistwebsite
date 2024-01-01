@@ -1,10 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart';
+import 'package:medlistweb/Controller/authHandler.dart';
+import 'package:medlistweb/Pages/Auth/verify.dart';
+import 'package:medlistweb/constants/fields.dart';
 
-
+import '../../FirestoreMethod/authMedthods.dart';
 import '../../widget/dropdown.dart';
 import '../home.dart';
 import 'LoginPage.dart';
@@ -125,11 +131,27 @@ class Menu extends StatelessWidget {
   }
 }
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   Function reg;
   Function sign;
   bool register;
+
   Body({required this.reg, required this.sign, required this.register});
+
+  @override
+  State<Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  optionSetValue(TextEditingController controller, String value) {
+    setState(() {
+      controller.text = value;
+    });
+  }
+
+  bool _loading = false;
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -163,9 +185,7 @@ class Body extends StatelessWidget {
               width: width * 0.97,
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 0),
-                    child: formRegister(height, width, context)),
+                child: formRegister1(height, width, context, _formKey, optionSetValue),
               ),
             ),
             SizedBox(
@@ -175,6 +195,262 @@ class Body extends StatelessWidget {
         )
       ],
     );
+  }
+
+  Widget formRegister1(double height, double width, BuildContext context,
+      GlobalKey<FormState> _formKey, Function(TextEditingController, String) fun) {
+    List<String> genderOptions = ['Male', 'Female', 'Other'];
+    List<String> doctorSpecializations = [
+      'Cardiology',
+      'Dermatology',
+      'Endocrinology',
+      'Gastroenterology',
+      'Hematology',
+      'Neurology',
+      'Oncology',
+      'Orthopedics',
+      'Pediatrics',
+      'Psychiatry',
+      'Pulmonology',
+      'Rheumatology',
+      'Nephrology',
+      'Ophthalmology',
+      'Obstetrics and Gynecology',
+      'Urology',
+      'ENT (Otolaryngology)',
+      'Dentistry',
+      'Gynecology',
+      'Internal Medicine',
+      'Allergy and Immunology',
+      'Anesthesiology',
+      'Cardiothoracic Surgery',
+      'Colorectal Surgery',
+      'Critical Care Medicine',
+      'Dental Surgery',
+      'Diagnostic Radiology',
+      'Emergency Medicine',
+      'Family Medicine',
+      'General Surgery',
+      'Geriatric Medicine',
+      'Infectious Disease',
+      'Interventional Radiology',
+      'Medical Genetics',
+      'Nuclear Medicine',
+      'Nutrition and Dietetics',
+      'Osteopathy',
+      'Pain Medicine',
+      'Pathology',
+      'Physical Medicine and Rehabilitation',
+      'Plastic Surgery',
+      'Podiatry',
+      'Preventive Medicine',
+      'Radiation Oncology',
+      'Sports Medicine',
+      'Surgical Oncology',
+      'Transplant Surgery',
+      'Vascular Surgery',
+    ];
+
+    return Form(
+        key: _formKey,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: width * 0.3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/images/medlist.png",
+                    height: height * 0.15,
+                  ),
+                  SizedBox(
+                    height: height * 0.08,
+                  ),
+                  Image.asset("assets/images/doc.webp"),
+                ],
+              ),
+            ),
+            Container(
+              alignment: Alignment.topCenter,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: height * 0.15,
+                          height: height * 0.15,
+                          decoration: BoxDecoration(
+                              border: Border.all(width: 4, color: Colors.green),
+                              boxShadow: [
+                                BoxShadow(
+                                    spreadRadius: 2,
+                                    blurRadius: 10,
+                                    color: Colors.black.withOpacity(0.1),
+                                    offset: Offset(0, 2))
+                              ],
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(
+                                    "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-unknown-social-media-user-photo-default-avatar-profile-icon-vector-unknown-social-media-user-184816085.jpg",
+                                  ))),
+                        ),
+                        Positioned(
+                            bottom: 0,
+                            right: 10,
+                            child: Container(
+                              height: height * 0.04,
+                              width: height * 0.04,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  width: 2,
+                                  color: Colors.green,
+                                ),
+                                color: Colors.green,
+                              ),
+                              child: Icon(
+                                Icons.edit,
+                                size: 15,
+                                color: Colors.white,
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: height * 0.005,
+                  ),
+                  Center(
+                    child: Text(
+                      "Upload Picture",
+                      style: GoogleFonts.poppins(fontSize: height * 0.022, color: Colors.green),
+                    ),
+                  ),
+                  SizedBox(
+                    height: height * 0.015,
+                  ),
+                  Container(
+                    width: width * 0.5,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        textField1("First Name", "name", false, false, height, width / 2.1,
+                            firstName, validateFName),
+                        textField1("Last Name", "name", false, false, height, width / 2.1, lastName,
+                            validateLName),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: height * 0.02,
+                  ),
+                  Container(
+                    width: width * 0.5,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        textField1("Email", "name", false, false, height, width / 2.1, email,
+                            validateEmail),
+                        textField1("Phone Number", "name", false, false, height, width / 2.1,
+                            phoneNumber, validatePhoneNumber),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: height * 0.02,
+                  ),
+                  textField1("Hospital/Clinic Name", "name", false, false, height, width,
+                      hospitalName, validateHospitalName),
+                  SizedBox(height: height * 0.02),
+                  textField1("Hospital/Clinic Address", "name", false, false, height, width,
+                      hospitalAddress, validateHospitalAddress),
+                  SizedBox(height: height * 0.02),
+                  Container(
+                    width: width * 0.5,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        dropdown1(genderOptions, "Gender", width, gender, fun),
+                        dropdown1(
+                            doctorSpecializations, "Specialization", width, specialization, fun),
+                        textField1("Appointment Fee Rs.", "name", false, false, height, width * 0.4,
+                            fee, validateFee),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: height * 0.02),
+                  textField1("About", "name", false, false, height, width, about, validateAbout),
+                  SizedBox(height: height * 0.02),
+                  Container(
+                    width: width * 0.5,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        textField1("Password", "name", true, false, height, width / 2.1, password,
+                            validatePassword),
+                        textField1("Confirm Password", "name", true, false, height, width / 2.1,
+                            confirmPassword, validatePassword),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: height * 0.02),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.deepPurple[100]!,
+                          spreadRadius: 10,
+                          blurRadius: 20,
+                        ),
+                      ],
+                    ),
+                    child: ElevatedButton(
+                      child: Container(
+                          width: width * 0.48,
+                          height: 50,
+                          child: Center(
+                              child: _loading
+                                  ? LoadingAnimationWidget.waveDots(
+                                      color: Colors.white, size: height * 0.04)
+                                  : Text("Sign In"))),
+                      onPressed: () async {
+                        print(gender.text);
+                        print(specialization.text);
+                        setState(() {
+                          _loading = true;
+                        });
+                        // Get.to(VerifyPage(phoneNumber: phoneNumber.text));
+                        // if (_formKey.currentState?.validate() ?? false) {
+                        //   await FirebaseAuthMethods().signUpEmail(email.text, password.text);
+                        // }
+                        // setState(() {
+                        //   _loading = false;
+                        // });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green,
+                        onPrimary: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ));
   }
 }
 
@@ -210,264 +486,89 @@ Widget _menuItem({String title = 'Title Menu', isActive = false}) {
   );
 }
 
-Widget _registerButton(String text) {
-  return Container(
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(15),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey[200]!,
-          spreadRadius: 10,
-          blurRadius: 12,
-        ),
-      ],
-    ),
-    child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.black54,
-        ),
-      ),
-    ),
-  );
+String? validateLName(String? value) {
+  if (value!.isEmpty) {
+    return 'Enter your last name';
+  }
+  return null;
 }
 
-Widget formRegister(double height, double width, BuildContext context) {
-  List<String> genderOptions = ['Select Gender', 'Male', 'Female', 'Other'];
-  List<String> doctorSpecializations = [
-    'Cardiology',
-    'Dermatology',
-    'Endocrinology',
-    'Gastroenterology',
-    'Hematology',
-    'Neurology',
-    'Oncology',
-    'Orthopedics',
-    'Pediatrics',
-    'Psychiatry',
-    'Pulmonology',
-    'Rheumatology',
-    'Nephrology',
-    'Ophthalmology',
-    'Obstetrics and Gynecology',
-    'Urology',
-    'ENT (Otolaryngology)',
-    'Dentistry',
-    'Gynecology',
-    'Internal Medicine',
-    'Allergy and Immunology',
-    'Anesthesiology',
-    'Cardiothoracic Surgery',
-    'Colorectal Surgery',
-    'Critical Care Medicine',
-    'Dental Surgery',
-    'Diagnostic Radiology',
-    'Emergency Medicine',
-    'Family Medicine',
-    'General Surgery',
-    'Geriatric Medicine',
-    'Infectious Disease',
-    'Interventional Radiology',
-    'Medical Genetics',
-    'Nuclear Medicine',
-    'Nutrition and Dietetics',
-    'Osteopathy',
-    'Pain Medicine',
-    'Pathology',
-    'Physical Medicine and Rehabilitation',
-    'Plastic Surgery',
-    'Podiatry',
-    'Preventive Medicine',
-    'Radiation Oncology',
-    'Sports Medicine',
-    'Surgical Oncology',
-    'Transplant Surgery',
-    'Vascular Surgery',
-  ];
-  String selectedGender = 'Select Gender';
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Container(
-        width: width * 0.3,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              "assets/images/medlist.png",
-              height: height * 0.15,
-            ),
-            SizedBox(
-              height: height * 0.08,
-            ),
-            Image.asset("assets/images/doc.webp"),
-          ],
-        ),
-      ),
-      Container(
-        alignment: Alignment.topCenter,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(
-              child: Stack(
-                children: [
-                  Container(
-                    width: height * 0.15,
-                    height: height * 0.15,
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 4, color: Colors.green),
-                        boxShadow: [
-                          BoxShadow(
-                              spreadRadius: 2,
-                              blurRadius: 10,
-                              color: Colors.black.withOpacity(0.1),
-                              offset: Offset(0, 2))
-                        ],
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                              "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-unknown-social-media-user-photo-default-avatar-profile-icon-vector-unknown-social-media-user-184816085.jpg",
-                            ))),
-                  ),
-                  Positioned(
-                      bottom: 0,
-                      right: 10,
-                      child: Container(
-                        height: height * 0.04,
-                        width: height * 0.04,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            width: 2,
-                            color: Colors.green,
-                          ),
-                          color: Colors.green,
-                        ),
-                        child: Icon(
-                          Icons.edit,
-                          size: 15,
-                          color: Colors.white,
-                        ),
-                      )),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: height * 0.005,
-            ),
-            Center(
-              child: Text(
-                "Upload Picture",
-                style: GoogleFonts.poppins(fontSize: height * 0.022, color: Colors.green),
-              ),
-            ),
-            SizedBox(
-              height: height * 0.015,
-            ),
-            Container(
-              width: width * 0.5,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  textField("First Name", "name", false, false, height, width / 2.1),
-                  textField("Last Name", "name", false, false, height, width / 2.1),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: height * 0.02,
-            ),
-            Container(
-              width: width * 0.5,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  textField("Email", "name", false, false, height, width / 2.1),
-                  textField("Phone Number", "name", false, false, height, width / 2.1),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: height * 0.02,
-            ),
-            textField("Hospital/Clinic Name", "name", false, false, height, width),
-            SizedBox(height: height * 0.02),
-            textField("Hospital/Clinic Address", "name", false, false, height, width),
-            SizedBox(height: height * 0.02),
-            Container(
-              width: width * 0.5,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  dropdown(genderOptions, "Gender", width),
-                  dropdown(doctorSpecializations, "Specialization", width),
-                  textField("Appointment Fee Rs.", "name", false, false, height, width * 0.4),
-                ],
-              ),
-            ),
-            SizedBox(height: height * 0.02),
-            textField("About", "name", false, false, height, width),
-            SizedBox(height: height * 0.02),
-            Container(
-              width: width * 0.5,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  textField("Password", "name", true, false, height, width / 2.1),
-                  textField("Confirm Password", "name", true, false, height, width / 2.1),
-                ],
-              ),
-            ),
-            SizedBox(height: height * 0.02),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.deepPurple[100]!,
-                    spreadRadius: 10,
-                    blurRadius: 20,
-                  ),
-                ],
-              ),
-              child: ElevatedButton(
-                child: Container(
-                    width: width * 0.48, height: 50, child: Center(child: Text("Sign In"))),
-                onPressed: () =>
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen())),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
-                  onPrimary: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
+String? validateFName(String? value) {
+  if (value!.isEmpty) {
+    return 'Enter your first name';
+  }
+  return null;
 }
 
-Widget textField(String hint, String counter, bool pass, bool phone, double height, double width) {
+String? validateEmail(String? value) {
+  if (value!.isEmpty) {
+    return 'Enter an email address';
+  } else if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+      .hasMatch(value)) {
+    return 'Enter a valid email address';
+  }
+  return null;
+}
+
+String? validatePhoneNumber(String? value) {
+  if (value!.isEmpty) {
+    return 'Enter a phone number';
+  } else if (!RegExp(r"^[0-9]{10}$").hasMatch(value)) {
+    return 'Enter a valid 10-digit phone number';
+  }
+  return null;
+}
+
+String? validatePassword(String? value) {
+  if (value!.isEmpty) {
+    return 'Enter a password';
+  } else if (value.length < 8) {
+    return 'Password must be at least 8 characters long';
+  } else if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%^&*])[A-Za-z\d!@#\$%^&*]+$')
+      .hasMatch(value)) {
+    return 'Password must include at least one uppercase letter, one lowercase letter, one digit, and one special character';
+  }
+  return null;
+}
+
+String? validateHospitalName(String? value) {
+  if (value!.isEmpty) {
+    return 'Enter the hospital/clinic name';
+  }
+  return null;
+}
+
+String? validateHospitalAddress(String? value) {
+  if (value!.isEmpty) {
+    return 'Enter the hospital/clinic address';
+  }
+  return null;
+}
+
+String? validateFee(String? value) {
+  if (value!.isEmpty) {
+    return 'Enter the fee';
+  }
+  return null;
+}
+
+String? validateAbout(String? value) {
+  if (value!.isEmpty) {
+    return 'Enter the about';
+  }
+  return null;
+}
+
+Widget textField1(String hint, String counter, bool pass, bool phone, double height, double width,
+    TextEditingController controller, String? Function(String?) validator) {
   return Container(
     width: width * 0.5,
-    child: TextField(
+    child: TextFormField(
+      controller: controller,
       keyboardType: phone ? TextInputType.number : null,
       maxLength: phone ? 10 : null,
       obscureText: pass,
+      validator: validator,
       decoration: InputDecoration(
         counterText: "",
         hintText: hint,
@@ -492,6 +593,16 @@ Widget textField(String hint, String counter, bool pass, bool phone, double heig
           borderSide: BorderSide(color: Colors.green),
           borderRadius: BorderRadius.circular(5),
         ),
+        errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              color: Colors.red,
+            )),
+        focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              color: Colors.red,
+            )),
       ),
     ),
   );

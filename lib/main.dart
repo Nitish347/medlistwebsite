@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 
 import 'Pages/Auth/registerUser.dart';
 
@@ -9,11 +10,11 @@ void main() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: FirebaseOptions(
-            storageBucket: "medlistweb.appspot.com",
-            apiKey: "AIzaSyB27Gw2eXab4uImPWIDfqOATWtixlPfzCw",
-            appId: "1:1038374340019:web:fbe8c67290f2334864b7c6",
-            messagingSenderId: "1038374340019",
-            projectId: "medlistweb"));
+            storageBucket: "medlist-bc347.appspot.com",
+            apiKey: "AIzaSyBO1anoaUMW1cBgNEtSmbKtYR2DhL75bH8",
+            appId: "1:335430665006:web:69fdd0ee32d9566195f0bf",
+            messagingSenderId: "335430665006",
+            projectId: "medlist-bc347"));
   } else {
     await Firebase.initializeApp();
   }
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,

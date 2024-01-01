@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,6 +45,34 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               content: Requests(widht, height));
         });
+  }
+
+  bool isEmailVerified = false;
+  Timer? timer;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirebaseAuth.instance.currentUser?.sendEmailVerification();
+    timer = Timer.periodic(const Duration(seconds: 3), (_) => checkEmailVerified());
+  }
+
+  checkEmailVerified() async {
+    print('verifying');
+    await FirebaseAuth.instance.currentUser?.reload();
+
+    setState(() {
+      isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    });
+
+    if (isEmailVerified) {
+      print("verified");
+      // TODO: implement your code after email verification
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Email Successfully Verified")));
+
+      timer?.cancel();
+    }
   }
 
   @override
