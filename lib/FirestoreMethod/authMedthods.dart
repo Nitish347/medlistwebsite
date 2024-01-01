@@ -26,7 +26,7 @@ class FirebaseAuthMethods {
     }
   }
 
-  void sendOTP(String PhoneNumber) {
+  String sendOTP(String PhoneNumber) {
     auth.verifyPhoneNumber(
         phoneNumber: "+918840867665",
         // verificationCompleted: (PhoneAuthCredential credential) async {
@@ -43,9 +43,10 @@ class FirebaseAuthMethods {
         codeAutoRetrievalTimeout: (String verficationID) {},
         verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {});
     print("code sent");
+    return verficationID_received;
   }
 
-  void verifycode(String otp, BuildContext context) async {
+  void verifycode(String otp, BuildContext context, String verficationID_received) async {
     PhoneAuthCredential credential =
         PhoneAuthProvider.credential(verificationId: verficationID_received, smsCode: otp);
     await auth.signInWithCredential(credential).then((value) async {

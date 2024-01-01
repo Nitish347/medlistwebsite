@@ -429,7 +429,10 @@ class _BodyState extends State<Body> {
                         setState(() {
                           _loading = true;
                         });
-                        // Get.to(VerifyPage(phoneNumber: phoneNumber.text));
+                        String data = FirebaseAuthMethods().sendOTP("PhoneNumber");
+                        Get.to(VerifyPage(
+                          verficationID_received: data,
+                        ));
                         // if (_formKey.currentState?.validate() ?? false) {
                         //   await FirebaseAuthMethods().signUpEmail(email.text, password.text);
                         // }
