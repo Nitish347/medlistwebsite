@@ -7,11 +7,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:medlistweb/FirestoreMethod/authMedthods.dart';
 import 'package:medlistweb/Pages/Auth/registerUser.dart';
+import 'package:medlistweb/Pages/home.dart';
 import 'package:pinput/pinput.dart';
 
+import '../../models/UserModel.dart';
+import 'emailVerify.dart';
+
 class VerifyPage extends StatefulWidget {
-  String verficationID_received;
-  VerifyPage({required this.verficationID_received});
+  UserModel user;
+  VerifyPage({required this.user});
   @override
   State<VerifyPage> createState() => _VerifyPageState();
 }
@@ -278,7 +282,7 @@ class _VerifyPageState extends State<VerifyPage> {
   String verficationID_received = "";
   String sendOTP(String PhoneNumber) {
     auth.verifyPhoneNumber(
-        phoneNumber: "+918840867665",
+        phoneNumber: "+91${widget.user.phone!}",
         // verificationCompleted: (PhoneAuthCredential credential) async {
         //   await auth.signInWithCredential(credential).then((value) {
         //     print("login successfully");
@@ -301,6 +305,9 @@ class _VerifyPageState extends State<VerifyPage> {
     BuildContext context,
   ) async {
     print(otp);
+    Get.to(EmailVerifyPage(
+      user: widget.user,
+    ));
     PhoneAuthCredential credential =
         PhoneAuthProvider.credential(verificationId: verficationID_received, smsCode: otp);
     await auth.signInWithCredential(credential).then((value) async {
@@ -308,6 +315,7 @@ class _VerifyPageState extends State<VerifyPage> {
       final uid = user?.uid;
       // await FirestoreMethods().uploadData(widget.user.toJson(), uid!);
       print("logged in successfully");
+
       // SaveUser.saveUser(context, uid!);
       // MedicineSave _alarmHelper = MedicineSave();
       // _alarmHelper.initializeDatabase().then((value) {

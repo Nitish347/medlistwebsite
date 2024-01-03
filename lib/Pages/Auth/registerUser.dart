@@ -7,10 +7,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart';
 import 'package:medlistweb/Controller/authHandler.dart';
+import 'package:medlistweb/OBSdata.dart';
 import 'package:medlistweb/Pages/Auth/verify.dart';
 import 'package:medlistweb/constants/fields.dart';
 
 import '../../FirestoreMethod/authMedthods.dart';
+import '../../models/UserModel.dart';
 import '../../widget/dropdown.dart';
 import '../home.dart';
 import 'LoginPage.dart';
@@ -35,6 +37,7 @@ class _RegisterUserState extends State<RegisterUser> {
     });
   }
 
+  final obsController = Get.put(ObsData());
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -429,13 +432,28 @@ class _BodyState extends State<Body> {
                         setState(() {
                           _loading = true;
                         });
-                        String data = FirebaseAuthMethods().sendOTP("PhoneNumber");
-                        Get.to(VerifyPage(
-                          verficationID_received: data,
-                        ));
-                        // if (_formKey.currentState?.validate() ?? false) {
-                        //   await FirebaseAuthMethods().signUpEmail(email.text, password.text);
-                        // }
+                        // String data = FirebaseAuthMethods().sendOTP("PhoneNumber");
+
+                        if (_formKey.currentState?.validate() ?? false) {
+                          var json = {
+                            "FirstName": firstName.text,
+                            "LastName": lastName.text,
+                            "Email": email.text,
+                            "Phone": phoneNumber.text,
+                            "HospitalName": hospitalName.text,
+                            "DoctorName": "",
+                            "Address": hospitalAddress.text,
+                            "Gender": gender.text,
+                            "Specialization": specialization.text,
+                            "About": about.text,
+                            "Password": password.text
+                          };
+                          UserModel NewUser = UserModel.fromJson(json);
+                          await FirebaseAuthMethods().signUpEmail(email.text, password.text);
+                          Get.to(VerifyPage(
+                            user: NewUser,
+                          ));
+                        }
                         // setState(() {
                         //   _loading = false;
                         // });
