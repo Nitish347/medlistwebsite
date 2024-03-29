@@ -6,15 +6,17 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'Pages/Auth/registerUser.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+ await  WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
     await Firebase.initializeApp(
-        options: FirebaseOptions(
-            storageBucket: "medlist-bc347.appspot.com",
-            apiKey: "AIzaSyBO1anoaUMW1cBgNEtSmbKtYR2DhL75bH8",
-            appId: "1:335430665006:web:69fdd0ee32d9566195f0bf",
-            messagingSenderId: "335430665006",
-            projectId: "medlist-bc347"));
+        options: const FirebaseOptions(
+            apiKey: "AIzaSyAgBIvpegmqYEB0Kn2jClqql4R-VbyGHwE",
+            authDomain: "sihapp-2bc87.firebaseapp.com",
+            projectId: "sihapp-2bc87",
+            storageBucket: "sihapp-2bc87.appspot.com",
+            messagingSenderId: "270653334549",
+            appId: "1:270653334549:web:1e7f2262c016041102da1c",
+            measurementId: "G-63N5YCL6NC"));
   } else {
     await Firebase.initializeApp();
   }

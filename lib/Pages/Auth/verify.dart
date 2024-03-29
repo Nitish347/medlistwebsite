@@ -4,18 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
-import 'package:medlistweb/FirestoreMethod/authMedthods.dart';
-import 'package:medlistweb/Pages/Auth/registerUser.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:medlistweb/Controller/SigninController.dart';
 import 'package:medlistweb/Pages/home.dart';
 import 'package:pinput/pinput.dart';
 
 import '../../models/UserModel.dart';
-import 'emailVerify.dart';
 
 class VerifyPage extends StatefulWidget {
+  String id;
   UserModel user;
-  VerifyPage({required this.user});
+  VerifyPage({required this.user, required this.id});
   @override
   State<VerifyPage> createState() => _VerifyPageState();
 }
@@ -37,10 +36,11 @@ class _VerifyPageState extends State<VerifyPage> {
   @override
   void initState() {
     // TODO: implement initState
-    sendOTP("PhoneNumber");
+    // sendOTP("PhoneNumber");
   }
 
   String _otp = "";
+  bool _loading = false;
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -130,7 +130,7 @@ class _VerifyPageState extends State<VerifyPage> {
                               height: height * 0.05,
                             ),
                             Container(
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 borderRadius: BorderRadius.only(
                                   topRight: Radius.circular(38),
                                   topLeft: Radius.circular(38),
@@ -164,18 +164,18 @@ class _VerifyPageState extends State<VerifyPage> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 10,
                                           ),
                                           Container(
                                             width: width,
                                             alignment: Alignment.center,
                                             child: Pinput(
-                                              length: 6,
+                                              length: 4,
                                               defaultPinTheme: PinTheme(
                                                   width: height * 0.06,
                                                   height: height * 0.06,
-                                                  textStyle: TextStyle(
+                                                  textStyle: const TextStyle(
                                                       fontSize: 22,
                                                       color: Colors.black,
                                                       fontWeight: FontWeight.w400),
@@ -191,12 +191,6 @@ class _VerifyPageState extends State<VerifyPage> {
                                               autofocus: true,
                                               closeKeyboardWhenCompleted: false,
                                               onChanged: (val) {
-                                                print(val.toString());
-                                                setState(() {
-                                                  _otp = val.toString();
-                                                });
-                                              },
-                                              onSubmitted: (val) {
                                                 print(val.toString());
                                                 setState(() {
                                                   _otp = val.toString();
@@ -238,7 +232,20 @@ class _VerifyPageState extends State<VerifyPage> {
                                     ),
                                     InkWell(
                                       onTap: () async {
-                                        verifycode(_otp, context);
+                                        if (_otp.isNotEmpty && _otp.length == 4) {
+                                          setState(() {
+                                            _loading = true;
+                                          });
+                                          var data =
+                                              await SigninController.otpVerify(_otp, widget.id);
+                                          setState(() {
+                                            _loading = false;
+                                          });
+                                          if (data == "email verified") {
+                                            Get.to(() => HomeScreen());
+                                          }
+                                        }
+                                        // verifycode(_otp, context);
                                       },
                                       // onTap: () => Get.to(ChangePinScreen()),
                                       // onTap: () => Navigator.push(
@@ -252,13 +259,16 @@ class _VerifyPageState extends State<VerifyPage> {
                                         decoration: BoxDecoration(
                                             color: Colors.green,
                                             borderRadius: BorderRadius.circular(20)),
-                                        child: Text(
-                                          "Continue".tr,
-                                          style: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: height * 0.025,
-                                              color: Colors.white),
-                                        ),
+                                        child: _loading
+                                            ? LoadingAnimationWidget.waveDots(
+                                                color: Colors.white, size: height * 0.03)
+                                            : Text(
+                                                "Verify OTP".tr,
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: height * 0.025,
+                                                    color: Colors.white),
+                                              ),
                                       ),
                                     )
                                   ],
@@ -280,47 +290,46 @@ class _VerifyPageState extends State<VerifyPage> {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   String verficationID_received = "";
-  String sendOTP(String PhoneNumber) {
-    auth.verifyPhoneNumber(
-        phoneNumber: "+91${widget.user.phone!}",
-        // verificationCompleted: (PhoneAuthCredential credential) async {
-        //   await auth.signInWithCredential(credential).then((value) {
-        //     print("login successfully");
-        //   });
-        // },
-        verificationFailed: (FirebaseAuthException exception) {
-          print(exception.message);
-        },
-        codeSent: (String verficationID, int? resendtoken) {
-          verficationID_received = verficationID;
-        },
-        codeAutoRetrievalTimeout: (String verficationID) {},
-        verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {});
-    print("code sent");
-    return verficationID_received;
-  }
+  // sendOTP(String PhoneNumber) async {
+  //   await auth.verifyPhoneNumber(
+  //       phoneNumber: "+918840867665",
+  //       // verificationCompleted: (PhoneAuthCredential credential) async {
+  //       //   await auth.signInWithCredential(credential).then((value) {
+  //       //     print("login successfully");
+  //       //   });
+  //       // },
+  //       verificationFailed: (FirebaseAuthException exception) {
+  //         print(exception.message);
+  //       },
+  //       codeSent: (String verficationID, int? resendtoken) {
+  //         verficationID_received = verficationID;
+  //       },
+  //       codeAutoRetrievalTimeout: (String verficationID) {},
+  //       verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {});
+  //   print("code sent");
+  //   // return verficationID_received;
+  // }
 
-  void verifycode(
-    String otp,
-    BuildContext context,
-  ) async {
-    print(otp);
-    Get.to(EmailVerifyPage(
-      user: widget.user,
-    ));
-    PhoneAuthCredential credential =
-        PhoneAuthProvider.credential(verificationId: verficationID_received, smsCode: otp);
-    await auth.signInWithCredential(credential).then((value) async {
-      final User? user = auth.currentUser;
-      final uid = user?.uid;
-      // await FirestoreMethods().uploadData(widget.user.toJson(), uid!);
-      print("logged in successfully");
-
-      // SaveUser.saveUser(context, uid!);
-      // MedicineSave _alarmHelper = MedicineSave();
-      // _alarmHelper.initializeDatabase().then((value) {
-      //   print("*******************ho gyaa");
-      // });
-    });
-  }
+  // void verifycode(
+  //   String otp,
+  //   BuildContext context,
+  // ) async {
+  //   print(otp);
+  //
+  //   PhoneAuthCredential credential =
+  //       PhoneAuthProvider.credential(verificationId: verficationID_received, smsCode: otp);
+  //   await auth.signInWithCredential(credential).then((value) async {
+  //     final User? user = auth.currentUser;
+  //     final uid = user?.uid;
+  //     // await FirestoreMethods().uploadData(widget.user.toJson(), uid!);
+  //     print("logged in successfully");
+  //     // await FirebaseAuthMethods().signUpEmail(widget.user.email!, widget.user.password!);
+  //     Get.to(HomeScreen());
+  //     // SaveUser.saveUser(context, uid!);
+  //     // MedicineSave _alarmHelper = MedicineSave();
+  //     // _alarmHelper.initializeDatabase().then((value) {
+  //     //   print("*******************ho gyaa");
+  //     // });
+  //   });
+  // }
 }

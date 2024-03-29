@@ -346,8 +346,8 @@ class _EditProfileState extends State<EditProfile> {
               onPressed: () =>
                   Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen())),
               style: ElevatedButton.styleFrom(
-                primary: Colors.green,
-                onPrimary: Colors.white,
+                // primary: Colors.green,
+                // onPrimary: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

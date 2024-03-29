@@ -6,6 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart';
+import 'package:medlistweb/Controller/SigninController.dart';
 import 'package:medlistweb/Controller/authHandler.dart';
 import 'package:medlistweb/OBSdata.dart';
 import 'package:medlistweb/Pages/Auth/verify.dart';
@@ -64,13 +65,6 @@ class _RegisterUserState extends State<RegisterUser> {
                     SizedBox(
                       height: height * 0.05,
                     )
-
-                    // Center(
-                    //   child: Text(
-                    //     "© 2023 All Right Reserved",
-                    //     style: TextStyle(color: Colors.black54, fontWeight: FontWeight.w600, fontSize: 13),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -418,14 +412,6 @@ class _BodyState extends State<Body> {
                       ],
                     ),
                     child: ElevatedButton(
-                      child: Container(
-                          width: width * 0.48,
-                          height: 50,
-                          child: Center(
-                              child: _loading
-                                  ? LoadingAnimationWidget.waveDots(
-                                      color: Colors.white, size: height * 0.04)
-                                  : Text("Sign In"))),
                       onPressed: () async {
                         print(gender.text);
                         print(specialization.text);
@@ -434,37 +420,50 @@ class _BodyState extends State<Body> {
                         });
                         // String data = FirebaseAuthMethods().sendOTP("PhoneNumber");
 
-                        if (_formKey.currentState?.validate() ?? false) {
-                          var json = {
-                            "FirstName": firstName.text,
-                            "LastName": lastName.text,
-                            "Email": email.text,
-                            "Phone": phoneNumber.text,
-                            "HospitalName": hospitalName.text,
-                            "DoctorName": "",
-                            "Address": hospitalAddress.text,
-                            "Gender": gender.text,
-                            "Specialization": specialization.text,
-                            "About": about.text,
-                            "Password": password.text
-                          };
-                          UserModel NewUser = UserModel.fromJson(json);
-                          await FirebaseAuthMethods().signUpEmail(email.text, password.text);
-                          Get.to(VerifyPage(
-                            user: NewUser,
-                          ));
-                        }
-                        // setState(() {
-                        //   _loading = false;
-                        // });
+                        // if (_formKey.currentState?.validate() ?? false) {
+                        //   if (true) {
+                        //     var json = {
+                        //       "FirstName": firstName.text,
+                        //       "LastName": lastName.text,
+                        //       "Email": email.text,
+                        //       "Phone": phoneNumber.text,
+                        //       "HospitalName": hospitalName.text,
+                        //       "DoctorName": firstName.text + lastName.text,
+                        //       "Address": hospitalAddress.text,
+                        //       "Gender": gender.text,
+                        //       "Specialization": specialization.text,
+                        //       "About": about.text,
+                        //       "Password": password.text
+                        //     };
+                        //     UserModel NewUser = UserModel.fromJson(json);
+                        //     var data = await SigninController.signin(json);
+                        //     // await FirebaseAuthMethods().signUpEmail(email.text, password.text);
+                        //     Get.to(VerifyPage(
+                        //       id: data['_id'],
+                        //       user: NewUser,
+                        //     ));
+                        //   }
+                        // }
+                        Get.to(()=>HomeScreen());
+                        setState(() {
+                          _loading = false;
+                        });
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
-                        onPrimary: Colors.white,
+                        // primary: Colors.green,
+                        // onPrimary: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
+                      child: SizedBox(
+                          width: width * 0.48,
+                          height: 50,
+                          child: Center(
+                              child: _loading
+                                  ? LoadingAnimationWidget.waveDots(
+                                      color: Colors.white, size: height * 0.04)
+                                  : const Text("Sign In"))),
                     ),
                   ),
                 ],
@@ -545,9 +544,9 @@ String? validatePassword(String? value) {
     return 'Enter a password';
   } else if (value.length < 8) {
     return 'Password must be at least 8 characters long';
-  } else if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%^&*])[A-Za-z\d!@#\$%^&*]+$')
-      .hasMatch(value)) {
-    return 'Password must include at least one uppercase letter, one lowercase letter, one digit, and one special character';
+    // } else if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%^&*])[A-Za-z\d!@#\$%^&*]+$')
+    //     .hasMatch(value)) {
+    //   return 'Password must include at least one uppercase letter, one lowercase letter, one digit, and one special character';
   }
   return null;
 }

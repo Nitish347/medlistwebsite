@@ -44,6 +44,7 @@ class _EmailVerifyPageState extends State<EmailVerifyPage> {
     if (isEmailVerified) {
       print("verified");
       // TODO: implement your code after email verification
+      Get.to(HomeScreen());
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Email Successfully Verified")));
 

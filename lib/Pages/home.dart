@@ -53,26 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    FirebaseAuth.instance.currentUser?.sendEmailVerification();
-    timer = Timer.periodic(const Duration(seconds: 3), (_) => checkEmailVerified());
-  }
-
-  checkEmailVerified() async {
-    print('verifying');
-    await FirebaseAuth.instance.currentUser?.reload();
-
-    setState(() {
-      isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
-    });
-
-    if (isEmailVerified) {
-      print("verified");
-      // TODO: implement your code after email verification
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Email Successfully Verified")));
-
-      timer?.cancel();
-    }
   }
 
   @override

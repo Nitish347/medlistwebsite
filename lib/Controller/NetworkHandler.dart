@@ -30,7 +30,7 @@ class NetworkHandler {
   }
 
   static Uri buildUrl(String endpoint) {
-    String host = "http://localhost:3000/";
+    String host = "https://medlist-shivikatyagi.onrender.com/";
     final apiPath = host + endpoint;
     return Uri.parse(apiPath);
   }

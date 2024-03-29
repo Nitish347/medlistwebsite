@@ -293,8 +293,8 @@ class Body extends StatelessWidget {
             child: Container(width: width, height: 50, child: Center(child: Text("Sign In"))),
             onPressed: () => print("it's pressed"),
             style: ElevatedButton.styleFrom(
-              primary: Colors.green,
-              onPrimary: Colors.white,
+              // primary: Colors.green,
+              // onPrimary: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
@@ -478,8 +478,8 @@ Widget formRegister(double height, double width) {
           child: Container(width: width, height: 50, child: Center(child: Text("Sign In"))),
           onPressed: () => print("it's pressed"),
           style: ElevatedButton.styleFrom(
-            primary: Colors.green,
-            onPrimary: Colors.white,
+            // primary: Colors.green,
+            // onPrimary: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
