@@ -6,15 +6,17 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:medlistweb/Controller/SigninController.dart';
+import 'package:medlistweb/FirestoreMethod/SaveUser.dart';
 import 'package:medlistweb/Pages/home.dart';
 import 'package:pinput/pinput.dart';
 
 import '../../models/UserModel.dart';
 
 class VerifyPage extends StatefulWidget {
-  String id;
+  bool isLoagin;
+
   UserModel user;
-  VerifyPage({required this.user, required this.id});
+  VerifyPage({required this.user,required this.isLoagin});
   @override
   State<VerifyPage> createState() => _VerifyPageState();
 }
@@ -36,7 +38,7 @@ class _VerifyPageState extends State<VerifyPage> {
   @override
   void initState() {
     // TODO: implement initState
-    // sendOTP("PhoneNumber");
+    sendOTP(widget.user.phone!);
   }
 
   String _otp = "";
@@ -83,7 +85,7 @@ class _VerifyPageState extends State<VerifyPage> {
                       Row(
                         children: [
                           Text(
-                            "8840867665",
+                            widget.user.phone.toString(),
                             style: TextStyle(
                                 color: Colors.green,
                                 fontWeight: FontWeight.bold,
@@ -171,7 +173,7 @@ class _VerifyPageState extends State<VerifyPage> {
                                             width: width,
                                             alignment: Alignment.center,
                                             child: Pinput(
-                                              length: 4,
+                                              length: 6,
                                               defaultPinTheme: PinTheme(
                                                   width: height * 0.06,
                                                   height: height * 0.06,
@@ -232,20 +234,24 @@ class _VerifyPageState extends State<VerifyPage> {
                                     ),
                                     InkWell(
                                       onTap: () async {
-                                        if (_otp.isNotEmpty && _otp.length == 4) {
+                                        if (_otp.isNotEmpty && _otp.length == 6) {
                                           setState(() {
                                             _loading = true;
                                           });
-                                          var data =
-                                              await SigninController.otpVerify(_otp, widget.id);
+                                          verifycode(_otp, context);
                                           setState(() {
                                             _loading = false;
                                           });
-                                          if (data == "email verified") {
-                                            Get.to(() => HomeScreen());
-                                          }
+                                          //   // var data =
+                                          //   //     await SigninController.otpVerify(_otp, widget.id);
+                                          //   setState(() {
+                                          //     _loading = false;
+                                          //   });
+                                          //   if (data == "email verified") {
+                                          //     Get.to(() => HomeScreen());
+                                          //   }
+                                          // }
                                         }
-                                        // verifycode(_otp, context);
                                       },
                                       // onTap: () => Get.to(ChangePinScreen()),
                                       // onTap: () => Navigator.push(
@@ -290,46 +296,49 @@ class _VerifyPageState extends State<VerifyPage> {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   String verficationID_received = "";
-  // sendOTP(String PhoneNumber) async {
-  //   await auth.verifyPhoneNumber(
-  //       phoneNumber: "+918840867665",
-  //       // verificationCompleted: (PhoneAuthCredential credential) async {
-  //       //   await auth.signInWithCredential(credential).then((value) {
-  //       //     print("login successfully");
-  //       //   });
-  //       // },
-  //       verificationFailed: (FirebaseAuthException exception) {
-  //         print(exception.message);
-  //       },
-  //       codeSent: (String verficationID, int? resendtoken) {
-  //         verficationID_received = verficationID;
-  //       },
-  //       codeAutoRetrievalTimeout: (String verficationID) {},
-  //       verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {});
-  //   print("code sent");
-  //   // return verficationID_received;
-  // }
+  sendOTP(String PhoneNumber) async {
+    await auth.verifyPhoneNumber(
+        phoneNumber: "+91$PhoneNumber",
+        // verificationCompleted: (PhoneAuthCredential credential) async {
+        //   await auth.signInWithCredential(credential).then((value) {
+        //     print("login successfully");
+        //   });
+        // },
+        verificationFailed: (FirebaseAuthException exception) {
+          print(exception.message);
+        },
+        codeSent: (String verficationID, int? resendtoken) {
+          verficationID_received = verficationID;
+        },
+        codeAutoRetrievalTimeout: (String verficationID) {},
+        verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {});
+    print("code sent");
+    // return verficationID_received;
+  }
 
-  // void verifycode(
-  //   String otp,
-  //   BuildContext context,
-  // ) async {
-  //   print(otp);
-  //
-  //   PhoneAuthCredential credential =
-  //       PhoneAuthProvider.credential(verificationId: verficationID_received, smsCode: otp);
-  //   await auth.signInWithCredential(credential).then((value) async {
-  //     final User? user = auth.currentUser;
-  //     final uid = user?.uid;
-  //     // await FirestoreMethods().uploadData(widget.user.toJson(), uid!);
-  //     print("logged in successfully");
-  //     // await FirebaseAuthMethods().signUpEmail(widget.user.email!, widget.user.password!);
-  //     Get.to(HomeScreen());
-  //     // SaveUser.saveUser(context, uid!);
-  //     // MedicineSave _alarmHelper = MedicineSave();
-  //     // _alarmHelper.initializeDatabase().then((value) {
-  //     //   print("*******************ho gyaa");
-  //     // });
-  //   });
-  // }
+  void verifycode(
+    String otp,
+    BuildContext context,
+  ) async {
+    print(otp);
+
+    PhoneAuthCredential credential =
+        PhoneAuthProvider.credential(verificationId: verficationID_received, smsCode: otp);
+    await auth.signInWithCredential(credential).then((value) async {
+      final User? user = auth.currentUser;
+      String? uid = user?.uid;
+      // await FirestoreMethods().uploadData(widget.user.toJson(), uid!);
+      print("logged in successfully");
+      // await FirebaseAuthMethods().signUpEmail(widget.user.email!, widget.user.password!);
+      if(!widget.isLoagin) {
+        SaveUser.saveUser(context, uid!, widget.user);
+      }
+      Get.to(HomeScreen());
+      // SaveUser.saveUser(context, uid!);
+      // MedicineSave _alarmHelper = MedicineSave();
+      // _alarmHelper.initializeDatabase().then((value) {
+      //   print("*******************ho gyaa");
+      // });
+    });
+  }
 }

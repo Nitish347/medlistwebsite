@@ -1,7 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:get/instance_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:medlistweb/OBSdata.dart';
+import 'package:medlistweb/models/medicine%20model.dart';
 
 Widget dropdown(List<String> options, String hint, double width, [bool grey = true]) {
+  final controller = Get.put(ObsData());
   return Container(
     width: width * 0.14,
     child: DropdownMenu<String>(
@@ -35,6 +41,9 @@ Widget dropdown(List<String> options, String hint, double width, [bool grey = tr
       ),
       onSelected: (String? value) {
         // This is called when the user selects an item.
+        controller.medicines.add(MedicineModel.fromMap({
+          "title" : value!
+        }));
       },
       dropdownMenuEntries: options.map<DropdownMenuEntry<String>>((String value) {
         return DropdownMenuEntry<String>(value: value, label: value);

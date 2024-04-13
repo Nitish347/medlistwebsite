@@ -28,7 +28,7 @@ class FireStoreMethod {
         .set({"exercise": medicineModel});
   }
 
-  static dietPlan(BuildContext context, String uid, List<String> ls) async {
+  static dietPlan(BuildContext context, String uid, List<String> ls, List<String> ls2) async {
     print("fetching");
     var snap = await FirebaseFirestore.instance
         .collection('HospitalNames')
@@ -38,7 +38,8 @@ class FireStoreMethod {
         .collection("DietPlan")
         .doc("diet")
         .set({
-      "Deitplan": {"eat": ls}
+      "Deitplan": {"eat": ls,
+      "avoid" : ls2}
     });
   }
 }

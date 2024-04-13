@@ -41,8 +41,8 @@ dependencies:
   get:
   intl:
   provider:
-  firebase_auth: ^4.18.0
-  firebase_core: ^2.27.2
+  firebase_auth:
+  firebase_core:
   cloud_firestore: ^4.3.1
   firebase_storage:
   lottie:
@@ -52,6 +52,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   syncfusion_flutter_datagrid: ^23.1.38
   quickalert: ^1.0.2
+  flutter_secure_storage: ^9.0.0
 
 
 dev_dependencies:

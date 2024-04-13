@@ -8,26 +8,26 @@ import 'package:medlistweb/FirestoreMethod/Fetch_Data.dart';
 
 import '../../OBSdata.dart';
 
-class HomeScreenBody extends StatefulWidget {
-  const HomeScreenBody({Key? key}) : super(key: key);
+class Labs extends StatefulWidget {
+  const Labs({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreenBody> createState() => _HomeScreenBodyState();
+  State<Labs> createState() => _LabsState();
 }
 
-class _HomeScreenBodyState extends State<HomeScreenBody> {
- bool  _loading = false;
- FirebaseAuth auth = FirebaseAuth.instance;
- getData()async{
-   setState(() {
-     _loading = true;
-   });
+class _LabsState extends State<Labs> {
+  bool  _loading = false;
+  FirebaseAuth auth = FirebaseAuth.instance;
+  getData()async{
+    setState(() {
+      _loading = true;
+    });
 
-   await Fetch.fetchUser(auth.currentUser!.uid);
-   setState(() {
-     _loading = false;
-   });
- }
+    await Fetch.fetchUser(auth.currentUser!.uid);
+    setState(() {
+      _loading = false;
+    });
+  }
   @override
   void initState() {
     super.initState();
@@ -48,96 +48,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            alignment: Alignment.center,
-            width: width * 0.25,
-            height: height * 0.88,
-            decoration: BoxDecoration(
-                color: Colors.green,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white.withOpacity(0.5),
-                    blurRadius: 10.0,
-                  ),
-                  BoxShadow(
-                      color: Colors.black.withOpacity(0.4),
-                      offset: Offset(4.0, 4.0),
-                      blurRadius: 10.0)
-                ],
-                // border: Border.all(
-                //     // color: Colors.green,
-                //     ),
-                borderRadius: BorderRadius.circular(8)),
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Center(
-                    child: Stack(
-                      children: [
-                        Container(
-                          width: height * 0.15,
-                          height: height * 0.15,
-                          decoration: BoxDecoration(
-                              border: Border.all(width: 4, color: Colors.green),
-                              boxShadow: [
-                                BoxShadow(
-                                    spreadRadius: 2,
-                                    blurRadius: 10,
-                                    color: Colors.black.withOpacity(0.1),
-                                    offset: Offset(0, 2))
-                              ],
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                    "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-unknown-social-media-user-photo-default-avatar-profile-icon-vector-unknown-social-media-user-184816085.jpg",
-                                  ))),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    'Nitish Chaurasiya',
-                    style: GoogleFonts.poppins(
-                        fontSize: height * 0.03, fontWeight: FontWeight.w500, color: Colors.white),
-                  ),
-                  Text(
-                    'Operation Expert',
-                    style: GoogleFonts.poppins(
-                        fontSize: height * 0.02, fontWeight: FontWeight.w500, color: Colors.white),
-                  ),
-                  RatingBar.builder(
-                    initialRating: 3.5,
-                    minRating: 1,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemSize: height * 0.03,
-                    glow: true,
-                    glowRadius: 20,
-                    ignoreGestures: true,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    onRatingUpdate: (rating) {
-                      print(rating);
-                    },
-                  ),
-                  AboutText(height, "Fees", "1000/-"),
-                  AboutText(height, "Phone No.", "${controller.user.value.phone}"),
-                  AboutText(height, "Clinic Name", "${controller.user.value.hospitalName}"),
-                  AboutText(height, "Address", "${controller.user.value.phone}"),
-                  AboutText(height, "Education", "MBBS, Delhi Aims"),
-                  AboutText(height, "About","${controller.user.value.about}")
-                           ],
-              ),
-            ),
-          ),
+
           Container(
             height: height * 0.88,
             decoration: BoxDecoration(
@@ -170,12 +81,12 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
               ),
               Center(
                   child: Text(
-                'Search For Patient',
-                style: GoogleFonts.poppins(
-                  fontSize: height * 0.04,
-                  fontWeight: FontWeight.w500,
-                ),
-              )),
+                    'Search For Patient',
+                    style: GoogleFonts.poppins(
+                      fontSize: height * 0.04,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: width * 0.1),
                 child: Container(
@@ -222,7 +133,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                     height: height * 0.06,
                     width: width * 0.07,
                     decoration:
-                        BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(50)),
+                    BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(50)),
                     child: Text(
                       "Search",
                       style: GoogleFonts.poppins(
@@ -236,14 +147,19 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
               SizedBox(
                 height: height * 0.1,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  homeInfo(height, width, "Total No. of Appointement (Today)", "126"),
-                  homeInfo(height, width, "Total No. of Appointement Left", "98"),
-                  homeInfo(height, width, "Total No. of Appointement Done", "28"),
-                ],
-              )
+            Padding(
+              padding:  EdgeInsets.symmetric(horizontal: width*0.3),
+              child: Container(
+                height: height*0.1,
+                width: height*0.1,
+                decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                child: Icon(Icons.upload),
+              ),
+            ),
+              Center(child: Text("Upload Report"))
             ]),
           ),
         ],
@@ -303,21 +219,21 @@ Widget homeInfo(double height, double width, String label, String data) {
       children: [
         Center(
             child: Text(
-          label,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.poppins(
-            fontSize: height * 0.023,
-            fontWeight: FontWeight.w500,
-          ),
-        )),
+              label,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                fontSize: height * 0.023,
+                fontWeight: FontWeight.w500,
+              ),
+            )),
         Center(
             child: Text(
-          data,
-          style: GoogleFonts.poppins(
-            fontSize: height * 0.04,
-            fontWeight: FontWeight.w500,
-          ),
-        )),
+              data,
+              style: GoogleFonts.poppins(
+                fontSize: height * 0.04,
+                fontWeight: FontWeight.w500,
+              ),
+            )),
       ],
     ),
   );

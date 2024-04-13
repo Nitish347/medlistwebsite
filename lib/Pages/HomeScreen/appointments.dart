@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../HomePage.dart';
+import '../../temp_Home.dart';
 import '../presripition.dart';
 
 Widget Appointment(double height, double width, BuildContext context) {
@@ -182,13 +183,13 @@ Widget Appointment(double height, double width, BuildContext context) {
                               label: Text('Booked Time',
                                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
                         ],
-                        rows: List.generate(25, (index) {
+                        rows: List.generate(1, (index) {
                           return DataRow(
                               onSelectChanged: (val) {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const PrescriptionScreen()));
+                                        builder: (context) => const TempHome()));
                               },
                               cells: const [
                                 DataCell(Text('1')),

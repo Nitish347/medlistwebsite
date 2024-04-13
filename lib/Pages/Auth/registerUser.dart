@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -413,44 +415,46 @@ class _BodyState extends State<Body> {
                     ),
                     child: ElevatedButton(
                       onPressed: () async {
-                        print(gender.text);
-                        print(specialization.text);
+                        log(gender.text);
+                        log(specialization.text);
                         setState(() {
                           _loading = true;
                         });
                         // String data = FirebaseAuthMethods().sendOTP("PhoneNumber");
 
                         // if (_formKey.currentState?.validate() ?? false) {
-                        //   if (true) {
-                        //     var json = {
-                        //       "FirstName": firstName.text,
-                        //       "LastName": lastName.text,
-                        //       "Email": email.text,
-                        //       "Phone": phoneNumber.text,
-                        //       "HospitalName": hospitalName.text,
-                        //       "DoctorName": firstName.text + lastName.text,
-                        //       "Address": hospitalAddress.text,
-                        //       "Gender": gender.text,
-                        //       "Specialization": specialization.text,
-                        //       "About": about.text,
-                        //       "Password": password.text
-                        //     };
-                        //     UserModel NewUser = UserModel.fromJson(json);
-                        //     var data = await SigninController.signin(json);
-                        //     // await FirebaseAuthMethods().signUpEmail(email.text, password.text);
-                        //     Get.to(VerifyPage(
-                        //       id: data['_id'],
-                        //       user: NewUser,
-                        //     ));
-                        //   }
-                        // }
-                        Get.to(()=>HomeScreen());
+    if(true){
+                          if (true) {
+                            var json = {
+                              "FirstName": firstName.text,
+                              "LastName": lastName.text,
+                              "Email": email.text,
+                              "Phone": phoneNumber.text,
+                              "HospitalName": hospitalName.text,
+                              "DoctorName": firstName.text + lastName.text,
+                              "Address": hospitalAddress.text,
+                              "Gender": gender.text,
+                              "Specialization": specialization.text,
+                              "About": about.text,
+                              "Password": password.text
+                            };
+                            UserModel NewUser = UserModel.fromJson(json);
+                            // var data = await SigninController.signin(json);
+                            // await FirebaseAuthMethods().signUpEmail(email.text, password.text);
+                            Get.to(VerifyPage(
+                              // id: data['_id'],
+                              isLoagin: false,
+                              user: NewUser,
+                            ));
+                          }
+                        }
+                        // Get.to(()=>HomeScreen());
                         setState(() {
                           _loading = false;
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        // primary: Colors.green,
+                        primary: Colors.green,
                         // onPrimary: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -463,7 +467,9 @@ class _BodyState extends State<Body> {
                               child: _loading
                                   ? LoadingAnimationWidget.waveDots(
                                       color: Colors.white, size: height * 0.04)
-                                  : const Text("Sign In"))),
+                                  :  Text("Sign In",style: GoogleFonts.poppins(
+                                color: Colors.white
+                              ),))),
                     ),
                   ),
                 ],
@@ -542,12 +548,13 @@ String? validatePhoneNumber(String? value) {
 String? validatePassword(String? value) {
   if (value!.isEmpty) {
     return 'Enter a password';
-  } else if (value.length < 8) {
-    return 'Password must be at least 8 characters long';
+  }
+  // else if (value.length < 8) {
+  //   return 'Password must be at least 8 characters long';
     // } else if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%^&*])[A-Za-z\d!@#\$%^&*]+$')
     //     .hasMatch(value)) {
     //   return 'Password must include at least one uppercase letter, one lowercase letter, one digit, and one special character';
-  }
+  // }
   return null;
 }
 

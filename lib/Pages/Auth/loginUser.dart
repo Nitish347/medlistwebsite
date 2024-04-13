@@ -1,9 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:medlistweb/Controller/SigninController.dart';
+import 'package:medlistweb/Controller/authHandler.dart';
 import 'package:medlistweb/Pages/Auth/registerUser.dart';
+import 'package:medlistweb/Pages/Auth/verify.dart';
+import 'package:medlistweb/Pages/home.dart';
+import 'package:medlistweb/models/UserModel.dart';
 
 class LoginPageUser extends StatefulWidget {
   @override
@@ -78,12 +85,13 @@ class Menu extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(right: size.width * 0.1),
             child: InkWell(
-              onTap: () =>
-                  Navigator.push(context, CupertinoPageRoute(builder: (context) => RegisterUser())),
+              onTap: () => Navigator.push(context,
+                  CupertinoPageRoute(builder: (context) => RegisterUser())),
               child: Container(
                 alignment: Alignment.center,
-                decoration:
-                    BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20)),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
                   child: Text(
@@ -105,6 +113,9 @@ class Body extends StatelessWidget {
   Function sign;
   bool register;
   Body({required this.reg, required this.sign, required this.register});
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  final signinController = Get.put(SigninController());
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -215,7 +226,9 @@ class Body extends StatelessWidget {
                 padding: const EdgeInsets.all(20.0),
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 0),
-                  child: register ? formRegister(height, width) : _formLogin(height, width),
+                  child: register
+                      ? formRegister(height, width)
+                      : _formLogin(height, width),
                 ),
               ),
             ),
@@ -237,8 +250,9 @@ class Body extends StatelessWidget {
           height: height * 0.04,
         ),
         TextField(
+          controller: email,
           decoration: InputDecoration(
-            hintText: 'Phone number',
+            hintText: 'Email',
             filled: true,
             fillColor: Colors.blueGrey[50],
             labelStyle: TextStyle(fontSize: 12),
@@ -253,15 +267,13 @@ class Body extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 30),
+        SizedBox(
+          height: height * 0.04,
+        ),
         TextField(
+          controller: password,
           decoration: InputDecoration(
             hintText: 'Password',
-            counterText: 'Forgot password?',
-            suffixIcon: Icon(
-              Icons.visibility_off_outlined,
-              color: Colors.grey,
-            ),
             filled: true,
             fillColor: Colors.blueGrey[50],
             labelStyle: TextStyle(fontSize: 12),
@@ -276,6 +288,7 @@ class Body extends StatelessWidget {
             ),
           ),
         ),
+
         SizedBox(height: height * 0.02),
         Container(
           decoration: BoxDecoration(
@@ -290,8 +303,16 @@ class Body extends StatelessWidget {
             ],
           ),
           child: ElevatedButton(
-            child: Container(width: width, height: 50, child: Center(child: Text("Sign In"))),
-            onPressed: () => print("it's pressed"),
+            child: Container(
+                width: width,
+                height: 50,
+                child: Center(child: Text("Sign In"))),
+            onPressed: () async{
+             await signinController.login(email.text , password.text);
+    },
+                // Get.to(() => VerifyPage(
+                // user: UserModel.fromJson({"Phone": email.text}),
+                // isLoagin: true)),
             style: ElevatedButton.styleFrom(
               // primary: Colors.green,
               // onPrimary: Colors.white,
@@ -323,7 +344,8 @@ class Body extends StatelessWidget {
         SizedBox(height: 10),
         Text(
           "OTP?",
-          style: GoogleFonts.poppins(fontSize: height * 0.025, fontWeight: FontWeight.w400),
+          style: GoogleFonts.poppins(
+              fontSize: height * 0.025, fontWeight: FontWeight.w400),
         )
         // Row(
         //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -475,7 +497,8 @@ Widget formRegister(double height, double width) {
           ],
         ),
         child: ElevatedButton(
-          child: Container(width: width, height: 50, child: Center(child: Text("Sign In"))),
+          child: Container(
+              width: width, height: 50, child: Center(child: Text("Sign In"))),
           onPressed: () => print("it's pressed"),
           style: ElevatedButton.styleFrom(
             // primary: Colors.green,

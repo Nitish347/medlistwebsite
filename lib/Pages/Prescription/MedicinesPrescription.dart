@@ -13,7 +13,7 @@ class MedicinePrescription extends StatefulWidget {
 }
 
 class _MedicinePrescriptionState extends State<MedicinePrescription> {
-  List tabs = [1, 1, 1, 1, 1, 1];
+  List tabs = [1,2,3,4,5];
   List<DropDownValueModel> MedicineNamesList = [];
   add() {
     for (var i in medicineNames) {
@@ -298,10 +298,10 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
         children: [
           Text(
             "1.",
-            style: GoogleFonts.poppins(fontSize: height! * 0.025, fontWeight: FontWeight.w400),
+            style: GoogleFonts.poppins(fontSize: height * 0.025, fontWeight: FontWeight.w400),
           ),
           dropdown(medicineNames, "Medicine", width! * 2.1),
-          dropdown(timing, "Time", width!),
+          dropdown(timing, "Time", width),
           dropdown(meal, "Meal", width * 1.5),
           dropdown(amount, "Amount", width)
         ],

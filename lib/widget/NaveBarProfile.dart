@@ -1,8 +1,10 @@
-import 'dart:js';
-
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:medlistweb/Pages/Auth/LoginPage.dart';
 import 'package:medlistweb/Pages/HomeScreen/EditProfile.dart';
 
 Widget profileDropDown(BuildContext context, double height, double width) {
@@ -31,7 +33,12 @@ Widget profileDropDown(BuildContext context, double height, double width) {
         ...MenuItems.secondItems.map(
           (item) => DropdownMenuItem<MenuItem>(
             value: item,
-            child: MenuItems.buildItem(item, context),
+            child: InkWell(
+                onTap: ()async{
+                  await FirebaseAuth.instance.signOut();
+                  // Get.to(()=>LoginPage());
+                },
+                child: MenuItems.buildItem(item, context)),
           ),
         ),
       ],

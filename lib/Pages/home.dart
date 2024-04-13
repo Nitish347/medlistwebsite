@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medlistweb/widget/Requests.dart';
 
+import '../labs.dart';
 import '../widget/NaveBarProfile.dart';
 import '../widget/navebar.dart';
 import 'Auth/loginUser.dart';
@@ -63,9 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     List tabs = [
       HomeScreenBody(),
       Appointment(height, width, context),
-      Center(
-        child: Text("2"),
-      ),
+      Labs(),
       Center(
         child: Text("3"),
       ),
@@ -105,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onTap: () {
                                   changeIndex(2);
                                 },
-                                child: _menuItem('OverView', index == 2, size.width)),
+                                child: _menuItem('Labs', index == 2, size.width)),
                             InkWell(
                                 onTap: () {
                                   changeIndex(3);
