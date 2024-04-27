@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../HomePage.dart';
-import '../../temp_Home.dart';
 import '../presripition.dart';
 
 Widget Appointment(double height, double width, BuildContext context) {
@@ -189,7 +186,7 @@ Widget Appointment(double height, double width, BuildContext context) {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const TempHome()));
+                                        builder: (context) => const PrescriptionScreen()));
                               },
                               cells: const [
                                 DataCell(Text('1')),

@@ -4,7 +4,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:medlistweb/FirestoreMethod/Fetch_Data.dart';
 
 import '../../OBSdata.dart';
 
@@ -23,7 +22,7 @@ class _LabsState extends State<Labs> {
       _loading = true;
     });
 
-    await Fetch.fetchUser(auth.currentUser!.uid);
+    // await Fetch.fetchUser(auth.currentUser!.uid);
     setState(() {
       _loading = false;
     });

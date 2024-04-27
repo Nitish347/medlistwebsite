@@ -8,5 +8,5 @@ class PendingRequestModel {}
 class ObsData extends GetxController {
   RxBool loggedIn = false.obs;
   Rx<UserModel> user = UserModel().obs;
-  List<MedicineModel> medicines = <MedicineModel>[].obs;
+  List<MedicineModelOld> medicines = <MedicineModelOld>[].obs;
 }

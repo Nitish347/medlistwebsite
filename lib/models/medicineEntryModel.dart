@@ -1,3 +1,4 @@
+import 'MedicineModel.dart';
 import 'medicine model.dart';
 
 class MdeicineEntryModel {

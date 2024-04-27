@@ -1,7 +1,6 @@
 
 
 import 'package:get/get_navigation/src/routes/get_route.dart';
-import 'package:medlistweb/HomePage.dart';
 import 'package:medlistweb/Pages/Auth/loginUser.dart';
 import 'package:medlistweb/Pages/home.dart';
 
@@ -21,7 +20,7 @@ class AppPages {
     ,GetPage(
         name: _Paths.LOGIN,
         page: () => LoginPageUser(),
-        middlewares: []),
+    )
 
   ];
 }

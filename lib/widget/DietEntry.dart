@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../FirestoreMethod/FirestoreMethods.dart';
 import 'dataentry.dart';
 import 'dietdataEntry.dart';
 
@@ -76,7 +75,7 @@ Widget DietEntry(
             ),
             InkWell(
               onTap: () async {
-                await FireStoreMethod.dietPlan(context, "uid", ls,ls2);
+                // await FireStoreMethod.dietPlan(context, "uid", ls,ls2);
               },
               child: Center(
                 child: Container(

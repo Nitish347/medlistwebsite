@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medlistweb/Controller/SigninController.dart';
 import '../Controller/NetworkHandler.dart';
+import '../Pages/home.dart';
 import 'app_pages.dart';
 
 class AuthMiddleware extends GetMiddleware {
@@ -12,9 +14,10 @@ class AuthMiddleware extends GetMiddleware {
   //bool isAuthenticated = false;
   // final OBSaccountController = Get.put(ObsData());
   checkLogin() async {
-    String? token = await NetworkHandler.getToken();
+    String? token = await SigninController.getToken();
     if (token != null) {
       log("-->> logged in");
+      // Get.to(()=> const HomeScreen());
       // var response = await NetWorkHandler.get("api/user");
       // log(response.toString());
       // if (response != null) {

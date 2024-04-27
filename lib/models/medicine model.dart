@@ -1,21 +1,21 @@
-class MedicineModel {
+class MedicineModelOld {
   int? id;
   String? title;
   DateTime? alarmDateTime;
 
-  MedicineModel({
+  MedicineModelOld({
     this.id,
     this.title,
     this.alarmDateTime,
   });
 
-  factory MedicineModel.fromMap(Map<String, dynamic> json) => MedicineModel(
+  factory MedicineModelOld.fromMap(Map<String, dynamic> json) => MedicineModelOld(
         id: json["id"],
         title: json["title"],
         alarmDateTime:
             DateTime.parse(json["alarmDateTime"].toDate().toString()),
       );
-  factory MedicineModel.fromMap1(Map<String, dynamic> json) => MedicineModel(
+  factory MedicineModelOld.fromMap1(Map<String, dynamic> json) => MedicineModelOld(
         id: json["id"],
         title: json["title"],
         alarmDateTime: DateTime.parse(json["alarmDateTime"]),

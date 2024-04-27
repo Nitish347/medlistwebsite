@@ -4,7 +4,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:medlistweb/FirestoreMethod/Fetch_Data.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:medlistweb/Controller/UserData.dart';
 
 import '../../OBSdata.dart';
 
@@ -16,39 +17,35 @@ class HomeScreenBody extends StatefulWidget {
 }
 
 class _HomeScreenBodyState extends State<HomeScreenBody> {
- bool  _loading = false;
- FirebaseAuth auth = FirebaseAuth.instance;
- getData()async{
-   setState(() {
-     _loading = true;
-   });
-
-   await Fetch.fetchUser(auth.currentUser!.uid);
-   setState(() {
-     _loading = false;
-   });
- }
   @override
   void initState() {
+    getUser();
     super.initState();
-    getData();
-
-    // TODO: implement initState
-
   }
+  bool _loadingUser = false;
+  void getUser() async{
+    setState(() {
+      _loadingUser = true;
+    });
+    await user.getUser();
+    setState(() {
+      _loadingUser = false;
+    });
+  }
+  final user = Get.put(UserData());
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    final controller = Get.put(ObsData());
-    return  _loading ? const Center(child: CircularProgressIndicator(),)  :   Container(
+    final controller = Get.put(UserData());
+    return  Container(
       alignment: Alignment.center,
       width: width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
+         _loadingUser ? LoadingAnimationWidget.bouncingBall(color:Colors.green  , size: height*0.05) :  Container(
             alignment: Alignment.center,
             width: width * 0.25,
             height: height * 0.88,
@@ -64,9 +61,6 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                       offset: Offset(4.0, 4.0),
                       blurRadius: 10.0)
                 ],
-                // border: Border.all(
-                //     // color: Colors.green,
-                //     ),
                 borderRadius: BorderRadius.circular(8)),
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -90,7 +84,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                                     offset: Offset(0, 2))
                               ],
                               shape: BoxShape.circle,
-                              image: DecorationImage(
+                              image: const DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage(
                                     "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-unknown-social-media-user-photo-default-avatar-profile-icon-vector-unknown-social-media-user-184816085.jpg",
@@ -100,12 +94,12 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                     ),
                   ),
                   Text(
-                    'Nitish Chaurasiya',
+                    controller.userModel.value.doctorName ?? "",
                     style: GoogleFonts.poppins(
                         fontSize: height * 0.03, fontWeight: FontWeight.w500, color: Colors.white),
                   ),
                   Text(
-                    'Operation Expert',
+                    controller.userModel.value.specialization  ?? "",
                     style: GoogleFonts.poppins(
                         fontSize: height * 0.02, fontWeight: FontWeight.w500, color: Colors.white),
                   ),
@@ -119,8 +113,8 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                     glow: true,
                     glowRadius: 20,
                     ignoreGestures: true,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                    itemBuilder: (context, _) => Icon(
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => const Icon(
                       Icons.star,
                       color: Colors.amber,
                     ),
@@ -129,11 +123,11 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                     },
                   ),
                   AboutText(height, "Fees", "1000/-"),
-                  AboutText(height, "Phone No.", "${controller.user.value.phone}"),
-                  AboutText(height, "Clinic Name", "${controller.user.value.hospitalName}"),
-                  AboutText(height, "Address", "${controller.user.value.phone}"),
+                  AboutText(height, "Phone No.", "${controller.userModel.value.phone}"),
+                  AboutText(height, "Clinic Name", "${controller.userModel.value.hospitalName}"),
+                  AboutText(height, "Address", "${controller.userModel.value.phone}"),
                   AboutText(height, "Education", "MBBS, Delhi Aims"),
-                  AboutText(height, "About","${controller.user.value.about}")
+                  AboutText(height, "About","${controller.userModel.value.about}")
                            ],
               ),
             ),

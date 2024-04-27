@@ -6,7 +6,6 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:medlistweb/Pages/Auth/LoginPage.dart';
 import 'package:medlistweb/routes/app_pages.dart';
 
-import 'HomePage.dart';
 import 'Pages/Auth/loginUser.dart';
 import 'Pages/Auth/registerUser.dart';
 import 'Pages/home.dart';
@@ -43,25 +42,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // home: StreamBuilder(
-      //     stream: FirebaseAuth.instance.authStateChanges(),
-      //     builder: (context, snapshot) {
-      //       if (snapshot.connectionState == ConnectionState.active) {
-      //         if (snapshot.hasData) {
-      //           return HomeScreen();
-      //         } else if (snapshot.hasError) {
-      //           return Center(
-      //             child: Text("${snapshot.error}"),
-      //           );
-      //         }
-      //       }
-      //       if (snapshot.connectionState == ConnectionState.waiting) {
-      //         return Center(
-      //           child: CircularProgressIndicator(),
-      //         );
-      //       }
-      //       return HomePage();
-      //     }),
     );
   }
 }

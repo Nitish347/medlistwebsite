@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:medlistweb/Controller/SigninController.dart';
-import 'package:medlistweb/FirestoreMethod/SaveUser.dart';
 import 'package:medlistweb/Pages/home.dart';
 import 'package:pinput/pinput.dart';
 
@@ -331,7 +330,7 @@ class _VerifyPageState extends State<VerifyPage> {
       print("logged in successfully");
       // await FirebaseAuthMethods().signUpEmail(widget.user.email!, widget.user.password!);
       if(!widget.isLoagin) {
-        SaveUser.saveUser(context, uid!, widget.user);
+        // SaveUser.saveUser(context, uid!, widget.user);
       }
       Get.to(HomeScreen());
       // SaveUser.saveUser(context, uid!);

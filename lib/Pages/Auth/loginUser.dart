@@ -310,9 +310,6 @@ class Body extends StatelessWidget {
             onPressed: () async{
              await signinController.login(email.text , password.text);
     },
-                // Get.to(() => VerifyPage(
-                // user: UserModel.fromJson({"Phone": email.text}),
-                // isLoagin: true)),
             style: ElevatedButton.styleFrom(
               // primary: Colors.green,
               // onPrimary: Colors.white,

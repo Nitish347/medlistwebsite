@@ -1,5 +1,4 @@
 List<String> medicineNames = [
-  "",
   "Aspirin",
   "Ibuprofen",
   "Acetaminophen",

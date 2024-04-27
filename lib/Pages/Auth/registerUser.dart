@@ -14,7 +14,6 @@ import 'package:medlistweb/OBSdata.dart';
 import 'package:medlistweb/Pages/Auth/verify.dart';
 import 'package:medlistweb/constants/fields.dart';
 
-import '../../FirestoreMethod/authMedthods.dart';
 import '../../models/UserModel.dart';
 import '../../widget/dropdown.dart';
 import '../home.dart';

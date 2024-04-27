@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../FirestoreMethod/FirestoreMethods.dart';
 import '../models/medicine model.dart';
 import 'dataentry.dart';
 
@@ -64,14 +63,14 @@ Widget MedicineEntry(BuildContext context) {
             child: InkWell(
               onTap: () async {
                 for (int i = 0; i < lstime.length; i++) {
-                  MedicineModel medicineModel = MedicineModel();
+                  MedicineModelOld medicineModel = MedicineModelOld();
                   medicineModel.title = lsname[i];
                   medicineModel.alarmDateTime = lstime[i];
                   medicineModel.id = 100 * i;
                   Map<String, dynamic> mp = medicineModel.toMap();
                   list1.add(mp);
                 }
-                await FireStoreMethod.medicinesData(context, "uid", list1);
+                // await FireStoreMethod.medicinesData(context, "uid", list1);
               },
               child: Container(
                 height: 50,

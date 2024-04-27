@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import '../models/medicine model.dart';
 
 class DataProviders with ChangeNotifier {
-  List<MedicineModel> medicineList = [];
-  void updateMedicineList(List<MedicineModel> medicineList) {
+  List<MedicineModelOld> medicineList = [];
+  void updateMedicineList(List<MedicineModelOld> medicineList) {
     this.medicineList = medicineList;
     notifyListeners();
   }

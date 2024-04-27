@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
         context: context,
         builder: (context) {
           return AlertDialog(
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(
                     10.0,
@@ -48,13 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
-  bool isEmailVerified = false;
-  Timer? timer;
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
     var width = MediaQuery.of(context).size.width;
     var size = MediaQuery.of(context).size;
     List tabs = [
-      HomeScreenBody(),
+      const HomeScreenBody(),
       Appointment(height, width, context),
-      Labs(),
-      Center(
+      const Labs(),
+      const Center(
         child: Text("3"),
       ),
     ];
@@ -120,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   onTap: () {
                                     showDataAlert(height, width);
                                   },
-                                  child: Icon(
+                                  child: const Icon(
                                     CupertinoIcons.bell,
                                     color: Colors.white,
                                   )),

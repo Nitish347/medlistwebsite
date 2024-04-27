@@ -1,8 +1,15 @@
+import 'dart:developer';
+
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:medlistweb/Controller/prescriptionController.dart';
+import 'package:medlistweb/models/medicine%20model.dart';
 import 'package:medlistweb/utils/lists.dart';
 
+import '../../models/MedicineModel.dart';
+import '../../widget/MedicineTextFields.dart';
 import '../../widget/dropdown.dart';
 
 class MedicinePrescription extends StatefulWidget {
@@ -13,26 +20,23 @@ class MedicinePrescription extends StatefulWidget {
 }
 
 class _MedicinePrescriptionState extends State<MedicinePrescription> {
-  List tabs = [1,2,3,4,5];
-  List<DropDownValueModel> MedicineNamesList = [];
-  add() {
-    for (var i in medicineNames) {
-      DropDownValueModel dropDownValueModel = DropDownValueModel(name: i, value: i);
-      MedicineNamesList.add(dropDownValueModel);
-    }
-  }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    add();
   }
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    var width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    final prescriptionController = Get.put(PrescriptionController());
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(010),
@@ -50,9 +54,6 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
                     offset: Offset(4.0, 4.0),
                     blurRadius: 10.0)
               ],
-              // border: Border.all(
-              //     // color: Colors.green,
-              //     ),
               borderRadius: BorderRadius.circular(8)),
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: height * 0.02),
@@ -63,11 +64,17 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
                     height: height * 0.005,
                   ),
                   MedicineBlockTitle(height, width),
-                  Column(
-                    children: List.generate(tabs.length, (index) {
-                      return MedicineBlock(height, width);
-                    }),
-                  ),
+                  Obx(() {
+                    return Column(
+                      children: List.generate(prescriptionController
+                          .prescribeMedicine.length < 5
+                          ? 5
+                          : prescriptionController.prescribeMedicine.length, (
+                          index) {
+                        return MedicineBlock(height, width, index);
+                      }),
+                    );
+                  }),
                   SizedBox(
                     height: height * 0.01,
                   ),
@@ -79,7 +86,8 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
                         InkWell(
                           onTap: () {
                             setState(() {
-                              tabs.add(1);
+                              prescriptionController.prescribeMedicine.add(
+                                  MedicineModel());
                             });
                           },
                           child: Container(
@@ -87,7 +95,8 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
                             height: height * 0.05,
                             width: width * 0.08,
                             decoration: BoxDecoration(
-                                color: Colors.grey, borderRadius: BorderRadius.circular(50)),
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(50)),
                             child: Text(
                               "Add More +",
                               style: GoogleFonts.poppins(
@@ -101,13 +110,19 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                for (var i in prescriptionController
+                                    .prescribeMedicine) {
+                                  log(i.medicineName ?? "null");
+                                }
+                              },
                               child: Container(
                                 alignment: Alignment.center,
                                 height: height * 0.05,
                                 width: width * 0.07,
                                 decoration: BoxDecoration(
-                                    color: Colors.red, borderRadius: BorderRadius.circular(50)),
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(50)),
                                 child: Text(
                                   "Clear All",
                                   style: GoogleFonts.poppins(
@@ -127,7 +142,8 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
                                 height: height * 0.05,
                                 width: width * 0.07,
                                 decoration: BoxDecoration(
-                                    color: Colors.green, borderRadius: BorderRadius.circular(50)),
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.circular(50)),
                                 child: Text(
                                   "Save",
                                   style: GoogleFonts.poppins(
@@ -151,93 +167,13 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
     );
   }
 
-  Widget dropDown2(String label, String PlaceHolder, String Controller, List<DropDownValueModel> ls,
-      double width, SingleValueDropDownController cntrl) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Expanded(
-        child: Container(
-          width: width,
-          child: DropDownTextField(
-            // initialValue: "name4",
-            controller: cntrl,
-            clearOption: true,
-            // enableSearch: true,
-            // dropdownColor: Colors.green,
-            textFieldDecoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Color(0xff002395), width: 1)),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(
-                  color: Color(0xff002395),
-                  width: 1.0,
-                ),
-              ),
-              contentPadding: EdgeInsets.only(bottom: 3, left: 20),
-              labelText: label,
-              labelStyle: GoogleFonts.poppins(color: Color(0xff002395)),
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              hintText: PlaceHolder,
-              hintStyle: const TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            validator: (value) {
-              if (value == null) {
-                return "Required field";
-              } else {
-                return null;
-              }
-            },
-            dropDownItemCount: 6,
 
-            dropDownList: ls,
-            onChanged: (val) {
-              setState(() {
-                Controller = val.toString();
-              });
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget medicineTextField(String hint, double height, double width) {
-    return Container(
-      width: width * 0.3,
-      child: TextField(
-        decoration: InputDecoration(
-          counterText: "",
-          hintText: hint,
-          filled: true,
-          fillColor: Colors.blueGrey[50],
-          labelText: hint,
-          labelStyle: GoogleFonts.poppins(fontSize: height * 0.018, color: Colors.green),
-          hintStyle:
-              GoogleFonts.poppins(fontSize: height * 0.019, color: Colors.grey.withOpacity(0.8)),
-          contentPadding: EdgeInsets.only(left: 10),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.green.withOpacity(0.3)),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.green),
-            borderRadius: BorderRadius.circular(5),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget MedicineBlock(double? height, double? width) {
-    List<String> timing = ["", "Morning", "Evening", "Night"];
-    List<String> amount = ["", "0.5", "1", "1.5", "2", "3", "4", "5"];
+  Widget MedicineBlock(double? height, double? width, int index) {
+    final controller = Get.put(PrescriptionController());
+    List<String> timing = [ "Morning", "Evening", "Night"];
+    List<String> amount = [ "0.5", "1", "1.5", "2", "3", "4", "5"];
     List<String> meal = [
-      "",
+
       "Before breakfast",
       "After Breakfast",
       "Before Lunch",
@@ -246,7 +182,6 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
       "After Dinner"
     ];
     List<String> medicineNames = [
-      "",
       "Aspirin",
       "Ibuprofen",
       "Acetaminophen",
@@ -297,13 +232,17 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text(
-            "1.",
-            style: GoogleFonts.poppins(fontSize: height * 0.025, fontWeight: FontWeight.w400),
+            (index + 1).toString(),
+            style: GoogleFonts.poppins(
+                fontSize: height * 0.025, fontWeight: FontWeight.w400),
           ),
-          dropdown(medicineNames, "Medicine", width! * 2.1),
-          dropdown(timing, "Time", width),
-          dropdown(meal, "Meal", width * 1.5),
-          dropdown(amount, "Amount", width)
+          dropdownMedicine(medicineNames, "Medicine", width! * 2.1, index),
+          dropdownMedicineTime(timing, "Time", width, index),
+          dropdownMedicineMealTime(meal, "Meal", width * 1.5, index),
+          dropdownMedicineAmount(amount, "Amount", width, index),
+          IconButton(onPressed: () {
+            controller.prescribeMedicine.removeAt(index);
+          }, icon: Icon(Icons.delete, color: Colors.red,))
         ],
       ),
     );
@@ -325,7 +264,8 @@ Widget MedicineBlockTitle(double height, double width) {
             alignment: Alignment.center,
             height: height * 0.05,
             width: width * 0.1,
-            decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(50)),
+            decoration: BoxDecoration(
+                color: Colors.red, borderRadius: BorderRadius.circular(50)),
             child: Text(
               " Previous Medicines ",
               style: GoogleFonts.poppins(
