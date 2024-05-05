@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:medlistweb/Controller/UserData.dart';
 import '../presripition.dart';
 
 Widget Appointment(double height, double width, BuildContext context) {
+  final controller = Get.put(UserData());
   return Container(
     width: width,
     child: Column(
@@ -174,13 +177,11 @@ Widget Appointment(double height, double width, BuildContext context) {
                               label: Text('Payment',
                                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
                           DataColumn(
-                              label: Text('price',
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
-                          DataColumn(
                               label: Text('Booked Time',
                                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
                         ],
-                        rows: List.generate(1, (index) {
+                        rows: List.generate(controller.appointmentList.length, (index) {
+                            var user = controller.appointmentList[index];
                           return DataRow(
                               onSelectChanged: (val) {
                                 Navigator.push(
@@ -188,17 +189,16 @@ Widget Appointment(double height, double width, BuildContext context) {
                                     MaterialPageRoute(
                                         builder: (context) => const PrescriptionScreen()));
                               },
-                              cells: const [
+                              cells:  [
                                 DataCell(Text('1')),
                                 DataCell(ListTile(
-                                  title: Text("Nitish Chaurasiya"),
-                                  subtitle: Text("nitishchaurasiya3470@gmail.com"),
+                                  title: Text(user.patientName ?? ""),
+                                  subtitle: Text(user.phone ?? ""),
                                   leading: CircleAvatar(),
                                 )),
-                                DataCell(Text('male')),
+                                DataCell(Text(user.gender ?? "")),
                                 DataCell(Text('Paid')),
-                                DataCell(Text('1000')),
-                                DataCell(Text('26/02/2023')),
+                                DataCell(Text(user.appointment?[0].date ?? "")),
                               ]);
                         })),
                   ]),

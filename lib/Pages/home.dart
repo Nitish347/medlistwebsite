@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:medlistweb/Controller/UserData.dart';
 import 'package:medlistweb/widget/Requests.dart';
 
 import '../labs.dart';
@@ -47,8 +49,13 @@ class _HomeScreenState extends State<HomeScreen> {
               content: Requests(widht, height));
         });
   }
-
-  @override
+final controller = Get.put(UserData());
+@override
+  void initState() {
+    controller.getAppointmnet();
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

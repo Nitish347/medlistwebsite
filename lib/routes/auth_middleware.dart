@@ -14,7 +14,7 @@ class AuthMiddleware extends GetMiddleware {
   //bool isAuthenticated = false;
   // final OBSaccountController = Get.put(ObsData());
   checkLogin() async {
-    String? token = await SigninController.getToken();
+    String? token = await SigningController.getToken();
     if (token != null) {
       log("-->> logged in");
       // Get.to(()=> const HomeScreen());

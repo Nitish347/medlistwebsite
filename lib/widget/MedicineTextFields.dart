@@ -91,7 +91,7 @@ Widget dropdownMedicineTime(
         style: GoogleFonts.poppins(color: Colors.green),
       ),
       onSelected: (String? value) {
-        controller.prescribeMedicine[index].time = value;
+        controller.prescribeMedicine[index].timeTaken = value;
       },
       dropdownMenuEntries:
       options.map<DropdownMenuEntry<String>>((String value) {
@@ -139,7 +139,7 @@ Widget dropdownMedicineMealTime(
         style: GoogleFonts.poppins(color: Colors.green),
       ),
       onSelected: (String? value) {
-        controller.prescribeMedicine[index].mealTime = value;
+        // controller.prescribeMedicine[index].mealTime = value;
       },
       dropdownMenuEntries:
       options.map<DropdownMenuEntry<String>>((String value) {
@@ -187,7 +187,7 @@ Widget dropdownMedicineAmount(
         style: GoogleFonts.poppins(color: Colors.green),
       ),
       onSelected: (String? value) {
-        controller.prescribeMedicine[index].amount = value;
+        // controller.prescribeMedicine[index].amount = value;
       },
       dropdownMenuEntries:
       options.map<DropdownMenuEntry<String>>((String value) {

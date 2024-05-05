@@ -9,7 +9,7 @@ import 'package:medlistweb/Controller/NetworkHandler.dart';
 import 'package:medlistweb/Controller/UserData.dart';
 import 'package:medlistweb/Pages/home.dart';
 
-class SigninController extends GetxController {
+class SigningController extends GetxController {
 
   static final client = http.Client();
   static const storage = FlutterSecureStorage();

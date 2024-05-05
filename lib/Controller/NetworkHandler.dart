@@ -16,15 +16,47 @@ class NetworkHandler {
     log(response.body);
     return response.body;
   }
+  static Future<String> auth_post(var body, String endpoint) async {
+    var token = await SigningController.getToken();
 
+    if (token != null) {
+      var response = await client.post(buildUrl(endpoint), body: body, headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      });
+      return response.body;
+    } else {
+      log(token.toString());
+      log("token failed to get");
+    }
+
+    return jsonEncode({"status": "failed", "msg": "nothing get"});
+  }
+  static Future<String> auth_patch(var body, String endpoint) async {
+    var token = await SigningController.getToken();
+
+    if (token != null) {
+      var response = await client.patch(buildUrl(endpoint), body: body, headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      });
+      return response.body;
+    } else {
+      log(token.toString());
+      log("token failed to get");
+    }
+
+    return jsonEncode({"status": "failed", "msg": "nothing get"});
+  }
   static Future<String> get(String endpoint) async {
-    var token = await SigninController.getToken();
+    var token = await SigningController.getToken();
     log( "token->$token");
     if (token != null) {
       var response = await client.get(buildUrl(endpoint), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token'
       });
+      log(response.body);
       return response.body;
     } else {
       log("token failed to get");

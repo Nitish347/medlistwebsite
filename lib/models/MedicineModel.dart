@@ -9,29 +9,29 @@ MedicineModel medicineModelFromJson(String str) => MedicineModel.fromJson(json.d
 String medicineModelToJson(MedicineModel data) => json.encode(data.toJson());
 
 class MedicineModel {
+  String? patientId;
   String? medicineName;
-  String? time;
-  String? mealTime;
-  String? amount;
+  String? picture;
+  String? timeTaken;
 
   MedicineModel({
+    this.patientId,
     this.medicineName,
-    this.time,
-    this.mealTime,
-    this.amount,
+    this.picture,
+    this.timeTaken,
   });
 
   factory MedicineModel.fromJson(Map<String, dynamic> json) => MedicineModel(
-    medicineName: json["medicineName"],
-    time: json["time"],
-    mealTime: json["mealTime"],
-    amount: json["amount"],
+    patientId: json["PatientID"],
+    medicineName: json["MedicineName"],
+    picture: json["Picture"],
+    timeTaken: json["TimeTaken"],
   );
 
   Map<String, dynamic> toJson() => {
-    "medicineName": medicineName,
-    "time": time,
-    "mealTime": mealTime,
-    "amount": amount,
+    "PatientID": patientId,
+    "MedicineName": medicineName,
+    "Picture": picture,
+    "TimeTaken": timeTaken,
   };
 }

@@ -4,6 +4,7 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:medlistweb/Controller/UserData.dart';
 import 'package:medlistweb/Controller/prescriptionController.dart';
 import 'package:medlistweb/models/medicine%20model.dart';
 import 'package:medlistweb/utils/lists.dart';
@@ -114,6 +115,9 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
                                 for (var i in prescriptionController
                                     .prescribeMedicine) {
                                   log(i.medicineName ?? "null");
+                                  log(i.timeTaken ?? "null");
+                                  log(i.patientId ?? "null");
+
                                 }
                               },
                               child: Container(
@@ -170,6 +174,7 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
 
   Widget MedicineBlock(double? height, double? width, int index) {
     final controller = Get.put(PrescriptionController());
+    final userController = Get.put(UserData());
     List<String> timing = [ "Morning", "Evening", "Night"];
     List<String> amount = [ "0.5", "1", "1.5", "2", "3", "4", "5"];
     List<String> meal = [
@@ -225,7 +230,7 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
       "Fentanyl",
       // Add more medicine names as needed
     ];
-
+     controller.prescribeMedicine[index].patientId  = userController.userModel.value.id;
     return Padding(
       padding: EdgeInsets.only(bottom: height! * 0.025),
       child: Row(

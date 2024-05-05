@@ -115,7 +115,7 @@ class Body extends StatelessWidget {
   Body({required this.reg, required this.sign, required this.register});
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
-  final signinController = Get.put(SigninController());
+  final signinController = Get.put(SigningController());
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
