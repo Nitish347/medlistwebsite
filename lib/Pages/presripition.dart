@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:animated_segmented_tab_control/animated_segmented_tab_control.dart';
+import 'package:medlistweb/models/appointmentModel.dart';
 
 import 'Prescription/DietPrescription.dart';
 import 'Prescription/ExercisePrescription.dart';
 import 'Prescription/MedicinesPrescription.dart';
 
 class PrescriptionScreen extends StatefulWidget {
-  const PrescriptionScreen({Key? key}) : super(key: key);
+  AppointmentModel appointmentModel;
+   PrescriptionScreen({Key? key,required this.appointmentModel}) : super(key: key);
 
   @override
   State<PrescriptionScreen> createState() => _PrescriptionScreenState();
 }
 
 class _PrescriptionScreenState extends State<PrescriptionScreen> {
-  List tabs = [MedicinePrescription(), DietPrescription(), ExerciesPrescription()];
+
   int index = 0;
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+    List tabs = [MedicinePrescription(appointmentModel: widget.appointmentModel), DietPrescription(), ExerciesPrescription()];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
@@ -41,6 +44,22 @@ class _PrescriptionScreenState extends State<PrescriptionScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   InkWell(
+                    onTap: () {
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        widget.appointmentModel.patientName ?? "",
+                        style: GoogleFonts.poppins(
+                            fontSize: height * 0.022,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.green),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: width * 0.1,
+                  ), InkWell(
                     onTap: () {
                       setState(() {
                         index = 0;

@@ -4,8 +4,11 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:medlistweb/Controller/UserData.dart';
+import 'package:medlistweb/Controller/medicineController.dart';
 import 'package:medlistweb/Controller/prescriptionController.dart';
+import 'package:medlistweb/models/appointmentModel.dart';
 import 'package:medlistweb/models/medicine%20model.dart';
 import 'package:medlistweb/utils/lists.dart';
 
@@ -14,7 +17,8 @@ import '../../widget/MedicineTextFields.dart';
 import '../../widget/dropdown.dart';
 
 class MedicinePrescription extends StatefulWidget {
-  const MedicinePrescription({Key? key}) : super(key: key);
+  AppointmentModel appointmentModel;
+   MedicinePrescription({Key? key,required this.appointmentModel}) : super(key: key);
 
   @override
   State<MedicinePrescription> createState() => _MedicinePrescriptionState();
@@ -26,9 +30,60 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
   void initState() {
     super.initState();
   }
+  showPreviousMedicines(double height, double widht, BuildContext context) {
+    bool sent = false;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    10.0,
+                  ),
+                ),
+              ),
+              contentPadding: const EdgeInsets.only(
+                top: 10.0,
+              ),
+              content:Container(
+                height: height*0.8,
+                width: widht*0.6,
+                child: ListView(
+                  children: List.generate(widget.appointmentModel.medicine?.length ?? 0, (index) {
+                    var medicine = widget.appointmentModel.medicine?[index];
+                    return Text(medicine?.medicineName ?? "");
+                  }),
+                ),
 
+              ));
+        });
+  }
+  final prescriptionController = Get.put(PrescriptionController());
+  final medicineController = Get.put(MedicineController());
+  bool _loading = false;
   @override
   Widget build(BuildContext context) {
+    showPatientsDetail(double height, double widht) {
+      bool sent = false;
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(
+                      10.0,
+                    ),
+                  ),
+                ),
+                contentPadding: const EdgeInsets.only(
+                  top: 10.0,
+                ),
+                content:Container());
+          });
+    }
+
     var height = MediaQuery
         .of(context)
         .size
@@ -37,7 +92,7 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
         .of(context)
         .size
         .width;
-    final prescriptionController = Get.put(PrescriptionController());
+  
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(010),
@@ -64,7 +119,7 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
                   SizedBox(
                     height: height * 0.005,
                   ),
-                  MedicineBlockTitle(height, width),
+                  MedicineBlockTitle(height, width,context),
                   Obx(() {
                     return Column(
                       children: List.generate(prescriptionController
@@ -112,13 +167,7 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
                           children: [
                             InkWell(
                               onTap: () {
-                                for (var i in prescriptionController
-                                    .prescribeMedicine) {
-                                  log(i.medicineName ?? "null");
-                                  log(i.timeTaken ?? "null");
-                                  log(i.patientId ?? "null");
 
-                                }
                               },
                               child: Container(
                                 alignment: Alignment.center,
@@ -140,8 +189,24 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
                               width: width * 0.02,
                             ),
                             InkWell(
-                              onTap: () {},
-                              child: Container(
+                              onTap: () {
+                                setState(() {
+                                  _loading = true;
+                                });
+                                for (var i in prescriptionController
+                                    .prescribeMedicine) {
+                                  i.id = widget.appointmentModel.id;
+                                  medicineController.postMedicines(i);
+                                  log(i.medicineName ?? "null");
+                                  // log(i.timeTaken ?? "null");
+                                  log(i.id ?? "null");
+
+                                }
+                                setState(() {
+                                  _loading = false;
+                                });
+                              },
+                              child: _loading ?LoadingAnimationWidget.twoRotatingArc(color: Colors.green, size: height*0.05)   :   Container(
                                 alignment: Alignment.center,
                                 height: height * 0.05,
                                 width: width * 0.07,
@@ -169,8 +234,80 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
         ),
       ),
     );
-  }
 
+  }
+  Widget MedicineBlockTitle(double height, double width,BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: height * 0.025),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: width * 0.065,
+          ),
+          InkWell(
+            onTap: () {
+              showPreviousMedicines(height,width,context);
+            },
+            child: Container(
+              alignment: Alignment.center,
+              height: height * 0.05,
+              width: width * 0.1,
+              decoration: BoxDecoration(
+                  color: Colors.red, borderRadius: BorderRadius.circular(50)),
+              child: Text(
+                " Previous Medicines ",
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: width * 0.008,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: width * 0.03,
+          ),
+          Text(
+            "Medicine",
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+              fontSize: width * 0.02,
+            ),
+          ),
+          SizedBox(
+            width: width * 0.14,
+          ),
+          Text(
+            "Time",
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+              fontSize: width * 0.02,
+            ),
+          ),
+          SizedBox(
+            width: width * 0.12,
+          ),
+          Text(
+            "Meal Time",
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+              fontSize: width * 0.02,
+            ),
+          ),
+          SizedBox(
+            width: width * 0.12,
+          ),
+          Text(
+            "Amount",
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+              fontSize: width * 0.02,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget MedicineBlock(double? height, double? width, int index) {
     final controller = Get.put(PrescriptionController());
@@ -230,7 +367,7 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
       "Fentanyl",
       // Add more medicine names as needed
     ];
-     controller.prescribeMedicine[index].patientId  = userController.userModel.value.id;
+     controller.prescribeMedicine[index].id  = userController.userModel.value.id;
     return Padding(
       padding: EdgeInsets.only(bottom: height! * 0.025),
       child: Row(
@@ -254,73 +391,4 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
   }
 }
 
-Widget MedicineBlockTitle(double height, double width) {
-  return Padding(
-    padding: EdgeInsets.only(bottom: height * 0.025),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: width * 0.065,
-        ),
-        InkWell(
-          onTap: () {},
-          child: Container(
-            alignment: Alignment.center,
-            height: height * 0.05,
-            width: width * 0.1,
-            decoration: BoxDecoration(
-                color: Colors.red, borderRadius: BorderRadius.circular(50)),
-            child: Text(
-              " Previous Medicines ",
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontSize: width * 0.008,
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: width * 0.03,
-        ),
-        Text(
-          "Medicine",
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: width * 0.02,
-          ),
-        ),
-        SizedBox(
-          width: width * 0.14,
-        ),
-        Text(
-          "Time",
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: width * 0.02,
-          ),
-        ),
-        SizedBox(
-          width: width * 0.12,
-        ),
-        Text(
-          "Meal Time",
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: width * 0.02,
-          ),
-        ),
-        SizedBox(
-          width: width * 0.12,
-        ),
-        Text(
-          "Amount",
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: width * 0.02,
-          ),
-        ),
-      ],
-    ),
-  );
-}
+

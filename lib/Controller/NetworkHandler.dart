@@ -53,7 +53,7 @@ class NetworkHandler {
     log( "token->$token");
     if (token != null) {
       var response = await client.get(buildUrl(endpoint), headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
+        // 'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token'
       });
       log(response.body);

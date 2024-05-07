@@ -6,6 +6,8 @@ import '../presripition.dart';
 
 Widget Appointment(double height, double width, BuildContext context) {
   final controller = Get.put(UserData());
+
+
   return Container(
     width: width,
     child: Column(
@@ -187,7 +189,9 @@ Widget Appointment(double height, double width, BuildContext context) {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const PrescriptionScreen()));
+                                        builder: (context) =>  PrescriptionScreen(
+                                          appointmentModel: controller.appointmentList[index],
+                                        )));
                               },
                               cells:  [
                                 DataCell(Text('1')),

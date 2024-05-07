@@ -15,6 +15,7 @@ import 'package:medlistweb/models/appointmentModel.dart';
 class UserData extends GetxController {
   Rx<UserModel> userModel = UserModel().obs;
   List<AppointmentModel> appointmentList = <AppointmentModel>[].obs;
+  List<AppointmentModel> appointmentDoneList = <AppointmentModel>[].obs;
 
   // ************************************USER DETAIL***********************************************************
   getUser()async{
@@ -47,26 +48,55 @@ class UserData extends GetxController {
   }
 
   // ****************************************GET APPOINTMENTS*******************************************************
+
   getAppointmnet()async{
-    DateTime dateTime = DateTime.now();
-    String dateTimeString = dateTime.toString();
-    DateTime dateTime1 = DateTime.parse(dateTimeString);
+    appointmentList.clear();
+    var headers = {
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1YTFkNTQ0Y2I4NjExZDRmNmE2Y2EiLCJpYXQiOjE3MTQ5MTczMjV9.7xfs79jk0SGB5NlXQXWZnN3Z5npHpH5yuzKXQvkXAJA'
+    };
+    var request = http.Request('GET', Uri.parse('https://medlist-shivikatyagi.onrender.com/appointment/left?date=24-03-2002'));
 
-    // Formatting the date in the desired format
-    DateFormat formatter = DateFormat('dd-MM-yyyy');
-    String formattedDate = formatter.format(dateTime);
-    formattedDate = "24-03-2002";
+    request.headers.addAll(headers);
 
-    try{
-      var response = await NetworkHandler.get("appointment/left?date=24-03-2002");
-      var data  = json.decode(response);
-      log("appointment-->$data");
-      for(var i in data){
-        AppointmentModel appointmentModel  =  AppointmentModel.fromJson(i);
+    http.StreamedResponse response = await request.send();
+    // var data = json.decode(response.stream.toString());
+    if (response.statusCode == 200) {
+      var data = await response.stream.bytesToString();
+      var appointments = json.decode(data.toString());
+      log(appointments.toString());
+      for( var i in appointments){
+        AppointmentModel appointmentModel = AppointmentModel.fromJson(i);
         appointmentList.add(appointmentModel);
       }
-        }catch(e){
-      log(e.toString());
+    }
+    else {
+      print(response.reasonPhrase);
+    }
+  }
+  // ****************************************GET APPOINTMENTS DONE *******************************************************
+
+  getAppointmnetDone()async{
+    appointmentDoneList.clear();
+    var headers = {
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1YTFkNTQ0Y2I4NjExZDRmNmE2Y2EiLCJpYXQiOjE3MTQ5MTczMjV9.7xfs79jk0SGB5NlXQXWZnN3Z5npHpH5yuzKXQvkXAJA'
+    };
+    var request = http.Request('GET', Uri.parse('https://medlist-shivikatyagi.onrender.com/appointment/done?date=24-03-2002'));
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    // var data = json.decode(response.stream.toString());
+    if (response.statusCode == 200) {
+      var data = await response.stream.bytesToString();
+      var appointments = json.decode(data.toString());
+      log(appointments.toString());
+      for( var i in appointments){
+        AppointmentModel appointmentModel = AppointmentModel.fromJson(i);
+        appointmentDoneList.add(appointmentModel);
+      }
+    }
+    else {
+      print(response.reasonPhrase);
     }
   }
 

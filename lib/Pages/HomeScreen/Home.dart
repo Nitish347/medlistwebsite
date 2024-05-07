@@ -19,20 +19,22 @@ class HomeScreenBody extends StatefulWidget {
 class _HomeScreenBodyState extends State<HomeScreenBody> {
   @override
   void initState() {
-    getUser();
+    getData();
     super.initState();
   }
+  final controller = Get.put(UserData());
   bool _loadingUser = false;
-  void getUser() async{
+  void getData() async{
     setState(() {
       _loadingUser = true;
     });
-    await user.getUser();
+    await controller.getUser();
+    await controller.getAppointmnet();
+    await controller.getAppointmnetDone();
     setState(() {
       _loadingUser = false;
     });
   }
-  final user = Get.put(UserData());
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -45,7 +47,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-         _loadingUser ? LoadingAnimationWidget.bouncingBall(color:Colors.green  , size: height*0.05) :  Container(
+         _loadingUser ? LoadingAnimationWidget.twoRotatingArc(color:Colors.green  , size: height*0.05) :  Container(
             alignment: Alignment.center,
             width: width * 0.25,
             height: height * 0.88,
@@ -233,9 +235,9 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  homeInfo(height, width, "Total No. of Appointement (Today)", "126"),
-                  homeInfo(height, width, "Total No. of Appointement Left", "98"),
-                  homeInfo(height, width, "Total No. of Appointement Done", "28"),
+                 _loadingUser ?  LoadingAnimationWidget.hexagonDots(color: Colors.green  , size: height*0.05)  :  homeInfo(height, width, "Total No. of Appointement (Today)", controller.appointmentList.length.toString()),
+                  _loadingUser ?  LoadingAnimationWidget.hexagonDots(color: Colors.green  , size: height*0.05)  :  homeInfo(height, width, "Total No. of Appointement Left", controller.appointmentList.length.toString()),
+                  _loadingUser ?  LoadingAnimationWidget.hexagonDots(color: Colors.green  , size: height*0.05)  :    homeInfo(height, width, "Total No. of Appointement Done", controller.appointmentDoneList.length.toString()),
                 ],
               )
             ]),
@@ -286,9 +288,6 @@ Widget homeInfo(double height, double width, String label, String data) {
           BoxShadow(
               color: Colors.black.withOpacity(0.4), offset: Offset(4.0, 4.0), blurRadius: 10.0)
         ],
-        // border: Border.all(
-        //     // color: Colors.green,
-        //     ),
         borderRadius: BorderRadius.circular(8)),
     alignment: Alignment.center,
     child: Column(
