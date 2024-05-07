@@ -5,7 +5,7 @@ import 'package:get/instance_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medlistweb/Controller/prescriptionController.dart';
 import 'package:medlistweb/OBSdata.dart';
-import 'package:medlistweb/Pages/Prescription/MedicinesPrescription.dart';
+import 'package:medlistweb/Pages/Prescription/medicine/MedicinesPrescription.dart';
 import 'package:medlistweb/models/medicine%20model.dart';
 
 Widget dropdown(List<String> options, String hint, double width,

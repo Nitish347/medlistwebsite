@@ -51,8 +51,10 @@ class UserData extends GetxController {
 
   getAppointmnet()async{
     appointmentList.clear();
+    var token = await SigningController.getToken();
     var headers = {
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1YTFkNTQ0Y2I4NjExZDRmNmE2Y2EiLCJpYXQiOjE3MTQ5MTczMjV9.7xfs79jk0SGB5NlXQXWZnN3Z5npHpH5yuzKXQvkXAJA'
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
     };
     var request = http.Request('GET', Uri.parse('https://medlist-shivikatyagi.onrender.com/appointment/left?date=24-03-2002'));
 
@@ -77,8 +79,10 @@ class UserData extends GetxController {
 
   getAppointmnetDone()async{
     appointmentDoneList.clear();
+    var token = await SigningController.getToken();
     var headers = {
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1YTFkNTQ0Y2I4NjExZDRmNmE2Y2EiLCJpYXQiOjE3MTQ5MTczMjV9.7xfs79jk0SGB5NlXQXWZnN3Z5npHpH5yuzKXQvkXAJA'
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
     };
     var request = http.Request('GET', Uri.parse('https://medlist-shivikatyagi.onrender.com/appointment/done?date=24-03-2002'));
 

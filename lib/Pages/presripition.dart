@@ -5,7 +5,7 @@ import 'package:medlistweb/models/appointmentModel.dart';
 
 import 'Prescription/DietPrescription.dart';
 import 'Prescription/ExercisePrescription.dart';
-import 'Prescription/MedicinesPrescription.dart';
+import 'Prescription/medicine/MedicinesPrescription.dart';
 
 class PrescriptionScreen extends StatefulWidget {
   AppointmentModel appointmentModel;

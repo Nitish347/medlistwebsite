@@ -12,9 +12,9 @@ import 'package:medlistweb/models/appointmentModel.dart';
 import 'package:medlistweb/models/medicine%20model.dart';
 import 'package:medlistweb/utils/lists.dart';
 
-import '../../models/MedicineModel.dart';
-import '../../widget/MedicineTextFields.dart';
-import '../../widget/dropdown.dart';
+import '../../../models/MedicineModel.dart';
+import '../../../widget/MedicineTextFields.dart';
+import '../../../widget/dropdown.dart';
 
 class MedicinePrescription extends StatefulWidget {
   AppointmentModel appointmentModel;
@@ -49,11 +49,31 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
               content:Container(
                 height: height*0.8,
                 width: widht*0.6,
-                child: ListView(
-                  children: List.generate(widget.appointmentModel.medicine?.length ?? 0, (index) {
-                    var medicine = widget.appointmentModel.medicine?[index];
-                    return Text(medicine?.medicineName ?? "");
-                  }),
+                child: Column(
+                  children: [
+                    Text("Previous Medicines",style: GoogleFonts.poppins(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: height*0.05
+                    ),),
+                    Container(
+                      height: height*0.7,
+                      width: widht*0.6,
+                      child: Padding(
+                        padding:  EdgeInsets.all(widht*0.03),
+                        child: ListView(
+                          children: List.generate(widget.appointmentModel.medicine?.length ?? 0, (index) {
+                            var medicine = widget.appointmentModel.medicine?[index];
+                            return Text( "${index+1}  ${medicine!.medicineName!}" ,style: GoogleFonts.poppins(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: height*0.02
+                            ));
+                          }),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
 
               ));

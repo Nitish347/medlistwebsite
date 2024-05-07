@@ -162,7 +162,7 @@ class Hospital {
 
 class Medicine {
   String? medicineName;
-  DateTime? timeTaken;
+  String? timeTaken;
   String? mealTime;
   String? picture;
   DateTime? dateAdded;
@@ -179,7 +179,7 @@ class Medicine {
 
   factory Medicine.fromJson(Map<String, dynamic> json) => Medicine(
     medicineName: json["MedicineName"],
-    timeTaken: json["TimeTaken"] == null ? null : DateTime.parse(json["TimeTaken"]),
+    timeTaken: json["TimeTaken"],
     mealTime: json["MealTime"],
     picture: json["Picture"],
     dateAdded: json["DateAdded"] == null ? null : DateTime.parse(json["DateAdded"]),
@@ -188,7 +188,7 @@ class Medicine {
 
   Map<String, dynamic> toJson() => {
     "MedicineName": medicineName,
-    "TimeTaken": timeTaken?.toIso8601String(),
+    "TimeTaken": timeTaken,
     "MealTime": mealTime,
     "Picture": picture,
     "DateAdded": dateAdded?.toIso8601String(),

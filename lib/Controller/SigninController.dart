@@ -46,7 +46,7 @@ class SigningController extends GetxController {
           "Password" : otp
       });
       var response = await NetworkHandler.post(data, "login_Hospital");
-      log(response);
+      print(response);
       var data2 = json.decode(response);
      storeToken(data2["token"]);
       if(data2['token'] != null){
@@ -61,6 +61,7 @@ class SigningController extends GetxController {
     await storage.write(key: "token", value: token);
   }
   static Future<String?> getToken() async {
+     print(await storage.read(key: 'token'));
     return await storage.read(key: "token");
   }
 
