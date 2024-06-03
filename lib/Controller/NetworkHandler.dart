@@ -21,7 +21,7 @@ class NetworkHandler {
 
     if (token != null) {
       var response = await client.post(buildUrl(endpoint), body: body, headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       });
       return response.body;

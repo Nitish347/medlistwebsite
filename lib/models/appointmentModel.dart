@@ -4,103 +4,95 @@
 
 import 'dart:convert';
 
-AppointmentModel appointmentModelFromJson(String str) => AppointmentModel.fromJson(json.decode(str));
+List<AppointmentModel> appointmentModelFromJson(String str) => List<AppointmentModel>.from(json.decode(str).map((x) => AppointmentModel.fromJson(x)));
 
-String appointmentModelToJson(AppointmentModel data) => json.encode(data.toJson());
+String appointmentModelToJson(List<AppointmentModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class AppointmentModel {
-  BalancedDiet? balancedDiet;
   String? id;
-  List<Hospital>? hospital;
-  List<Medicine>? medicine;
-  List<dynamic>? exercise;
-  List<dynamic>? reports;
-  List<Token>? tokens;
   String? patientName;
   int? age;
-  String? phone;
-  int? v;
   String? gender;
+  List<Hospital>? hospital;
+  String? phone;
+  List<Medicine>? medicine;
+  List<Medicine>? prevMedicine;
+  List<dynamic>? exercise;
+  BalancedDiet? balancedDiet;
   List<Appointment>? appointment;
 
   AppointmentModel({
-    this.balancedDiet,
     this.id,
-    this.hospital,
-    this.medicine,
-    this.exercise,
-    this.reports,
-    this.tokens,
     this.patientName,
     this.age,
-    this.phone,
-    this.v,
     this.gender,
+    this.hospital,
+    this.phone,
+    this.medicine,
+    this.prevMedicine,
+    this.exercise,
+    this.balancedDiet,
     this.appointment,
   });
 
   factory AppointmentModel.fromJson(Map<String, dynamic> json) => AppointmentModel(
-    balancedDiet: json["BalancedDiet"] == null ? null : BalancedDiet.fromJson(json["BalancedDiet"]),
     id: json["_id"],
-    hospital: json["Hospital"] == null ? [] : List<Hospital>.from(json["Hospital"]!.map((x) => Hospital.fromJson(x))),
-    medicine: json["Medicine"] == null ? [] : List<Medicine>.from(json["Medicine"]!.map((x) => Medicine.fromJson(x))),
-    exercise: json["Exercise"] == null ? [] : List<dynamic>.from(json["Exercise"]!.map((x) => x)),
-    reports: json["Reports"] == null ? [] : List<dynamic>.from(json["Reports"]!.map((x) => x)),
-    tokens: json["Tokens"] == null ? [] : List<Token>.from(json["Tokens"]!.map((x) => Token.fromJson(x))),
     patientName: json["PatientName"],
     age: json["Age"],
-    phone: json["Phone"],
-    v: json["__v"],
     gender: json["Gender"],
+    hospital: json["Hospital"] == null ? [] : List<Hospital>.from(json["Hospital"]!.map((x) => Hospital.fromJson(x))),
+    phone: json["Phone"],
+    medicine: json["Medicine"] == null ? [] : List<Medicine>.from(json["Medicine"]!.map((x) => Medicine.fromJson(x))),
+    prevMedicine: json["PrevMedicine"] == null ? [] : List<Medicine>.from(json["PrevMedicine"]!.map((x) => Medicine.fromJson(x))),
+    exercise: json["Exercise"] == null ? [] : List<dynamic>.from(json["Exercise"]!.map((x) => x)),
+    balancedDiet: json["BalancedDiet"] == null ? null : BalancedDiet.fromJson(json["BalancedDiet"]),
     appointment: json["Appointment"] == null ? [] : List<Appointment>.from(json["Appointment"]!.map((x) => Appointment.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
-    "BalancedDiet": balancedDiet?.toJson(),
     "_id": id,
-    "Hospital": hospital == null ? [] : List<dynamic>.from(hospital!.map((x) => x.toJson())),
-    "Medicine": medicine == null ? [] : List<dynamic>.from(medicine!.map((x) => x.toJson())),
-    "Exercise": exercise == null ? [] : List<dynamic>.from(exercise!.map((x) => x)),
-    "Reports": reports == null ? [] : List<dynamic>.from(reports!.map((x) => x)),
-    "Tokens": tokens == null ? [] : List<dynamic>.from(tokens!.map((x) => x.toJson())),
     "PatientName": patientName,
     "Age": age,
-    "Phone": phone,
-    "__v": v,
     "Gender": gender,
+    "Hospital": hospital == null ? [] : List<dynamic>.from(hospital!.map((x) => x.toJson())),
+    "Phone": phone,
+    "Medicine": medicine == null ? [] : List<dynamic>.from(medicine!.map((x) => x.toJson())),
+    "PrevMedicine": prevMedicine == null ? [] : List<dynamic>.from(prevMedicine!.map((x) => x.toJson())),
+    "Exercise": exercise == null ? [] : List<dynamic>.from(exercise!.map((x) => x)),
+    "BalancedDiet": balancedDiet?.toJson(),
     "Appointment": appointment == null ? [] : List<dynamic>.from(appointment!.map((x) => x.toJson())),
   };
 }
 
 class Appointment {
+  String? hospitalId;
   String? date;
   String? slot;
   String? status;
   String? id;
-  String? hospitalId;
 
   Appointment({
+    this.hospitalId,
     this.date,
     this.slot,
     this.status,
     this.id,
-    this.hospitalId,
   });
 
   factory Appointment.fromJson(Map<String, dynamic> json) => Appointment(
+    hospitalId: json["HospitalID"],
     date: json["Date"],
     slot: json["slot"],
     status: json["status"],
     id: json["_id"],
-    hospitalId: json["HospitalID"],
   );
 
   Map<String, dynamic> toJson() => {
+    "HospitalID": hospitalId,
     "Date": date,
     "slot": slot,
     "status": status,
     "_id": id,
-    "HospitalID": hospitalId,
   };
 }
 
@@ -161,14 +153,16 @@ class Hospital {
 }
 
 class Medicine {
+  String? hospitalId;
   String? medicineName;
-  String? timeTaken;
+  DateTime? timeTaken;
   String? mealTime;
   String? picture;
   DateTime? dateAdded;
   String? id;
 
   Medicine({
+    this.hospitalId,
     this.medicineName,
     this.timeTaken,
     this.mealTime,
@@ -178,8 +172,9 @@ class Medicine {
   });
 
   factory Medicine.fromJson(Map<String, dynamic> json) => Medicine(
+    hospitalId: json["HospitalID"],
     medicineName: json["MedicineName"],
-    timeTaken: json["TimeTaken"],
+    timeTaken: json["TimeTaken"] == null ? null : DateTime.parse(json["TimeTaken"]),
     mealTime: json["MealTime"],
     picture: json["Picture"],
     dateAdded: json["DateAdded"] == null ? null : DateTime.parse(json["DateAdded"]),
@@ -187,31 +182,12 @@ class Medicine {
   );
 
   Map<String, dynamic> toJson() => {
+    "HospitalID": hospitalId,
     "MedicineName": medicineName,
-    "TimeTaken": timeTaken,
+    "TimeTaken": timeTaken?.toIso8601String(),
     "MealTime": mealTime,
     "Picture": picture,
     "DateAdded": dateAdded?.toIso8601String(),
-    "_id": id,
-  };
-}
-
-class Token {
-  String? token;
-  String? id;
-
-  Token({
-    this.token,
-    this.id,
-  });
-
-  factory Token.fromJson(Map<String, dynamic> json) => Token(
-    token: json["token"],
-    id: json["_id"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "token": token,
     "_id": id,
   };
 }

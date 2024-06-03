@@ -29,3 +29,4 @@ class Constants {
   static final purplegradient1 =
       LinearGradient(colors: [Colors.white, Colors.white]);
 }
+String authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1YTFkNTQ0Y2I4NjExZDRmNmE2Y2EiLCJpYXQiOjE3MTYxMDgzNzF9.QI3S_XfpQCsZ_oFNL9XYN-DYk39Pk5QT_IjekuypDqI";

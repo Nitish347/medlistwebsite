@@ -1,23 +1,170 @@
+import 'dart:developer';
+
+import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:medlistweb/Controller/UserData.dart';
+import 'package:medlistweb/Controller/dietCotroller.dart';
+import 'package:medlistweb/Controller/medicineController.dart';
+import 'package:medlistweb/Controller/prescriptionController.dart';
+import 'package:medlistweb/models/appointmentModel.dart';
+import 'package:medlistweb/models/eat_model.dart';
+import 'package:medlistweb/models/medicine%20model.dart';
+import 'package:medlistweb/utils/lists.dart';
+import 'package:medlistweb/widget/DietTextField.dart';
 
-import '../../widget/dropdown.dart';
-
+import '../../../models/MedicineModel.dart';
+import '../../../widget/MedicineTextFields.dart';
+import '../../../widget/dropdown.dart';
 
 class DietPrescription extends StatefulWidget {
-  const DietPrescription({Key? key}) : super(key: key);
+  AppointmentModel appointmentModel;
+  DietPrescription({Key? key,required this.appointmentModel}) : super(key: key);
 
   @override
   State<DietPrescription> createState() => _DietPrescriptionState();
 }
 
 class _DietPrescriptionState extends State<DietPrescription> {
-  List tabs = [1, 1, 1, 1, 1, 1];
 
   @override
+  void initState() {
+    super.initState();
+  }
+  showPreviousMedicines(double height, double widht, BuildContext context) {
+    bool sent = false;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    10.0,
+                  ),
+                ),
+              ),
+              contentPadding: const EdgeInsets.only(
+                top: 10.0,
+              ),
+              content:Container(
+                height: height*0.8,
+                width: widht*0.6,
+                child: Column(
+                  children: [
+                    Text("Previous What to Eat",style: GoogleFonts.poppins(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: height*0.05
+                    ),),
+                    Container(
+                      height: height*0.7,
+                      width: widht*0.6,
+                      child: Padding(
+                        padding:  EdgeInsets.all(widht*0.03),
+                        child: ListView(
+                          children: List.generate(widget.appointmentModel.balancedDiet?.whatToEat?.length ?? 0, (index) {
+                            var food = widget.appointmentModel.balancedDiet?.whatToEat?[index];
+                            return Text( "${index+1}  ${food?.foodItem ?? ""}" ,style: GoogleFonts.poppins(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: height*0.02
+                            ));
+                          }),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+              ));
+        });
+  }
+  showPreviousWhatToAvoid(double height, double widht, BuildContext context) {
+    bool sent = false;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    10.0,
+                  ),
+                ),
+              ),
+              contentPadding: const EdgeInsets.only(
+                top: 10.0,
+              ),
+              content:Container(
+                height: height*0.8,
+                width: widht*0.6,
+                child: Column(
+                  children: [
+                    Text("Previous What to Avoid",style: GoogleFonts.poppins(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: height*0.05
+                    ),),
+                    Container(
+                      height: height*0.7,
+                      width: widht*0.6,
+                      child: Padding(
+                        padding:  EdgeInsets.all(widht*0.03),
+                        child: ListView(
+                          children: List.generate(widget.appointmentModel.balancedDiet?.whatNotToEat?.length ?? 0, (index) {
+                            var food = widget.appointmentModel.balancedDiet?.whatNotToEat?[index];
+                            return Text( "${index+1}  ${food?.foodItem ?? ""}" ,style: GoogleFonts.poppins(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: height*0.02
+                            ));
+                          }),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+              ));
+        });
+  }
+  final prescriptionController = Get.put(PrescriptionController());
+  final dietController = Get.put(DietController());
+  bool _loading = false;
+  @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
+    showPatientsDetail(double height, double widht) {
+      bool sent = false;
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(
+                      10.0,
+                    ),
+                  ),
+                ),
+                contentPadding: const EdgeInsets.only(
+                  top: 10.0,
+                ),
+                content:Container());
+          });
+    }
+
+    var height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    var width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(010),
@@ -35,9 +182,6 @@ class _DietPrescriptionState extends State<DietPrescription> {
                     offset: Offset(4.0, 4.0),
                     blurRadius: 10.0)
               ],
-              // border: Border.all(
-              //     // color: Colors.green,
-              //     ),
               borderRadius: BorderRadius.circular(8)),
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: height * 0.02),
@@ -47,24 +191,34 @@ class _DietPrescriptionState extends State<DietPrescription> {
                   SizedBox(
                     height: height * 0.005,
                   ),
-                  MedicineBlockTitle(height, width),
-                  Column(
-                    children: List.generate(tabs.length, (index) {
-                      return MedicineBlock(height, width);
-                    }),
-                  ),
+                  MedicineBlockTitle(height, width,context),
+                  Obx(() {
+                    return Column(
+                      children: List.generate(prescriptionController
+                          .presWhatToEat.length < 3
+                          ? 5
+                          : prescriptionController.presWhatToEat.length, (
+                          index) {
+                        return MedicineBlock(height, width, index);
+                      }),
+                    );
+                  }),
                   SizedBox(
                     height: height * 0.01,
                   ),
                   Container(
-                    width: width * 0.85,
+                    width: width * 0.86,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        SizedBox(),
                         InkWell(
                           onTap: () {
                             setState(() {
-                              tabs.add(1);
+                              prescriptionController.presWhatToEat.add(
+                                  Eat());
+                              prescriptionController.presWhatToAvoid.add(
+                                  Eat());
                             });
                           },
                           child: Container(
@@ -72,7 +226,8 @@ class _DietPrescriptionState extends State<DietPrescription> {
                             height: height * 0.05,
                             width: width * 0.08,
                             decoration: BoxDecoration(
-                                color: Colors.grey, borderRadius: BorderRadius.circular(50)),
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(50)),
                             child: Text(
                               "Add More +",
                               style: GoogleFonts.poppins(
@@ -82,17 +237,21 @@ class _DietPrescriptionState extends State<DietPrescription> {
                             ),
                           ),
                         ),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             InkWell(
-                              onTap: () {},
+                              onTap: () {
+
+                              },
                               child: Container(
                                 alignment: Alignment.center,
                                 height: height * 0.05,
                                 width: width * 0.07,
                                 decoration: BoxDecoration(
-                                    color: Colors.red, borderRadius: BorderRadius.circular(50)),
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(50)),
                                 child: Text(
                                   "Clear All",
                                   style: GoogleFonts.poppins(
@@ -106,13 +265,37 @@ class _DietPrescriptionState extends State<DietPrescription> {
                               width: width * 0.02,
                             ),
                             InkWell(
-                              onTap: () {},
-                              child: Container(
+                              onTap: () {
+                                setState(() {
+                                  _loading = true;
+                                });
+                                for (var i in prescriptionController
+                                    .presWhatToEat) {
+                                  i.id = widget.appointmentModel.id;
+                                  dietController.postWhatToEat(i);
+                                  log(i.d ?? "null");
+                                  // log(i.timeTaken ?? "null");
+                                  log(i.id ?? "null");
+                                }
+                                for (var i in prescriptionController
+                                    .presWhatToAvoid) {
+                                  i.id = widget.appointmentModel.id;
+                                  dietController.postWhatToAvoid(i);
+                                  log(i.d ?? "null");
+                                  // log(i.timeTaken ?? "null");
+                                  log(i.id ?? "null");
+                                }
+                                setState(() {
+                                  _loading = false;
+                                });
+                              },
+                              child: _loading ?LoadingAnimationWidget.twoRotatingArc(color: Colors.green, size: height*0.05)   :   Container(
                                 alignment: Alignment.center,
                                 height: height * 0.05,
                                 width: width * 0.07,
                                 decoration: BoxDecoration(
-                                    color: Colors.green, borderRadius: BorderRadius.circular(50)),
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.circular(50)),
                                 child: Text(
                                   "Save",
                                   style: GoogleFonts.poppins(
@@ -134,295 +317,214 @@ class _DietPrescriptionState extends State<DietPrescription> {
         ),
       ),
     );
+
   }
-}
-
-Widget medicineTextField(String hint, double height, double width) {
-  return Container(
-    width: width * 0.3,
-    child: TextField(
-      decoration: InputDecoration(
-        counterText: "",
-        hintText: hint,
-        filled: true,
-        fillColor: Colors.blueGrey[50],
-        labelText: hint,
-        labelStyle: GoogleFonts.poppins(fontSize: height * 0.018, color: Colors.green),
-        hintStyle:
-            GoogleFonts.poppins(fontSize: height * 0.019, color: Colors.grey.withOpacity(0.8)),
-        contentPadding: EdgeInsets.only(left: 10),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.green.withOpacity(0.3)),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.green),
-          borderRadius: BorderRadius.circular(5),
-        ),
-      ),
-    ),
-  );
-}
-
-Widget MedicineBlock(double? height, double? width) {
-  List<String> indianHealthyDishes = [
-    "",
-    'Tandoori Chicken',
-    'Grilled Fish Tikka',
-    'Masoor Dal (Red Lentil Curry)',
-    'Palak Paneer (Spinach and Cottage Cheese)',
-    'Bhindi Masala (Okra Curry)',
-    'Chana Masala (Chickpea Curry)',
-    'Vegetable Biryani',
-    'Baingan Bharta (Roasted Eggplant Curry)',
-    'Lauki (Bottle Gourd) Soup',
-    'Matar Paneer (Peas and Cottage Cheese)',
-    'Moong Dal Khichdi (Lentil and Rice Porridge)',
-    'Methi Thepla (Fenugreek Flatbread)',
-    'Chana Saag (Chickpeas with Spinach)',
-    'Cabbage Thoran (Stir-fried Cabbage)',
-    'Tofu Tikka',
-    'Poha (Flattened Rice with Vegetables)',
-    'Rajma (Kidney Bean Curry)',
-    'Sabudana Khichdi (Tapioca Pearl Pilaf)',
-    'Karela Sabzi (Bitter Gourd Stir-fry)',
-    'Aloo Gobi (Potato and Cauliflower)',
-    'Kalaadi (Paneer-like Cheese from Jammu)',
-    'Moong Dal Chilla (Lentil Pancakes)',
-    'Chicken Tikka Salad',
-    'Tamarind Chutney',
-    'Ragi Roti (Finger Millet Flatbread)',
-    'Gajar Ka Halwa (Carrot Pudding)',
-    'Masala Oats',
-    'Papaya Salad',
-    'Chole Bhature (Chickpea Curry with Fried Bread)',
-    'Baingan Bharwa (Stuffed Eggplant)',
-    'Methi Paratha (Fenugreek Flatbread)',
-    'Dal Makhani (Creamy Lentil Curry)',
-    'Tandoori Shrimp',
-    'Spinach Soup',
-    'Bharwa Karela (Stuffed Bitter Gourd)',
-    'Aloo Methi (Potatoes with Fenugreek Leaves)',
-    'Moong Dal Tadka (Tempered Split Yellow Lentils)',
-    'Tofu Bhurji (Scrambled Tofu)',
-    'Dhokla (Steamed Gram Flour Cake)',
-    'Beetroot Salad',
-    'Tinda Masala (Apple Gourd Curry)',
-    'Chicken Kebabs',
-    'Sarson Da Saag (Mustard Greens Curry)',
-    'Spinach and Mushroom Stir-fry',
-    'Jeera Rice (Cumin Flavored Rice)',
-    'Cucumber Raita',
-    'Paneer Tikka Masala',
-    'Methi Thepla (Fenugreek Flatbread)',
-    'Kalaadi Masala (Spiced Jammu Cheese)',
-    'Tandoori Mushroom',
-    'Sabudana Vada (Tapioca Fritters)',
-    'Aloo Palak (Potatoes with Spinach)',
-    'Chicken Soup',
-    'Mixed Vegetable Sabzi (Stir-fried Vegetables)',
-    'Raita (Yogurt with Cucumber and Spices)',
-    'Baingan Bharta (Roasted Eggplant Dip)',
-    'Moong Dal Salad',
-    'Tandoori Broccoli',
-    'Sprout Salad',
-    'Methi Rice (Fenugreek Rice)',
-    'Tofu Stir-fry',
-    'Cabbage and Carrot Salad',
-    'Mushroom Tikka',
-    'Malai Kofta (Creamy Vegetable Dumplings)',
-    'Masoor Dal Soup',
-    'Palak Paratha (Spinach Flatbread)',
-    'Stuffed Capsicum (Bell Pepper)',
-    'Aloo Gajar Sabzi (Potato and Carrot Curry)',
-    'Fish Curry',
-    'Vegetable Pulao',
-    'Curd Rice',
-    'Paneer Bhurji (Scrambled Cottage Cheese)',
-    'Baingan Pakora (Eggplant Fritters)',
-    'Tofu and Vegetable Stir-fry',
-    'Gajar Methi Sabzi (Carrot and Fenugreek Curry)',
-    'Chicken Biryani',
-    'Vegetable Upma',
-    'Bhindi Raita (Okra Yogurt Dip)',
-    'Dal Fry (Tempered Lentils)',
-    'Palak Puri (Spinach Flavored Fried Bread)',
-    'Aloo Baingan (Potato and Eggplant Curry)',
-    'Masoor Dal Khichdi (Lentil and Rice Porridge)',
-    'Tandoori Salmon',
-    'Spinach and Lentil Soup',
-    'Keema Matar (Minced Meat with Peas)',
-    'Vegetable Seekh Kebabs',
-    'Aloo Methi Paratha (Potato and Fenugreek Flatbread)',
-    'Dahi Puri (Yogurt-Filled Puffed Bread)',
-  ];
-  List<String> indianFruits = [
-    "",
-    'Aguaje (Mauritia flexuosa)',
-    'Aloe Vera',
-    'Aonla (Indian Gooseberry)',
-    'Apple',
-    'Apricot',
-    'Bael Fruit (Wood Apple)',
-    'Bael Fruit (Wood Apple)',
-    'Banana',
-    'Ber',
-    'Bilimbi',
-    'Black Sapote',
-    'Blackberry',
-    'Blueberry',
-    'Breadfruit',
-    'Buddha\'s Hand',
-    'Cactus Pear (Prickly Pear)',
-    'Carissa (Karonda)',
-    'Carambola (Starfruit)',
-    'Celeriac (Celery Root)',
-    'Chebulic Myrobalan (Haritaki)',
-    'Cherry',
-    'Cherimoya (Custard Apple)',
-    'Chikoo (Sapodilla)',
-    'Clementine',
-    'Coconut',
-    'Cordia (Lasora)',
-    'Cranberry',
-    'Cucumber',
-    'Custard Apple',
-    'Custard Apple (Sitaphal)',
-    'Date Palm',
-    'Dragon Fruit (Pitaya)',
-    'Durian',
-    'Elephant Apple (Chalta)',
-    'Feijoa',
-    'Fig',
-    'Falsa (Phalsa)',
-    'Falsa (Phalsa)',
-    'Grapes',
-    'Guava',
-    'Indian Barberry (Kilmora)',
-    'Indian Fig (Prickly Pear)',
-    'Indian Gooseberry (Amla)',
-    'Indian Plum (Ber)',
-    'Jujube (Ber)',
-    'Jungle Jalebi (Pithecellobium dulce)',
-    'Kiwano (Horned Melon)',
-    'Kiwi',
-    'Kokum',
-    'Kokum',
-    'Kundru (Ivy Gourd)',
-    'Kuruba (Malabar Plum)',
-    'Langsat (Lansium parasiticum)',
-    'Lemon',
-    'Lime',
-    'Litchi',
-    'Longan',
-    'Lychee',
-    'Lychee',
-    'Mala Mooti (Screw Pine)',
-    'Malay Apple (Syzygium malaccense)',
-    'Mango',
-    'Mango Ginger (Amba Haldi)',
-    'Mara Puli (Velvet Tamarind)',
-    'Morus (Mulberry)',
-    'Muskmelon',
-    'Naseberry (Sapodilla)',
-    'Nectarine',
-    'Orange',
-    'Papaya',
-    'Peach',
-    'Pepino',
-    'Pineapple',
-    'Pitanga (Surinam Cherry)',
-    'Pomegranate',
-    'Pummelo',
-    'Rambutan',
-    'Raspberry',
-    'Santol (Wild Mangosteen)',
-    'Sapodilla (Chikoo)',
-    'Sapota (Chikoo)',
-    'Sea Buckthorn',
-    'Soursop (Graviola)',
-    'Star Gooseberry (Phyllanthus acidus)',
-    'Starfruit (Carambola)',
-    'Strawberry',
-    'Surinam Cherry (Pitanga)',
-    'Sweet Lime (Mosambi)',
-    'Tadgola (Ice Apple)',
-    'Tamarillo (Tree Tomato)',
-    'Tamarind',
-    'Tangerine',
-    'Ugli Fruit',
-    'Velvet Tamarind (Mara Puli)',
-    'Wampee',
-    'Watermelon',
-    'Wild Jackfruit (Anchovy Pear)',
-    'Wood Apple (Bael Fruit)',
-    'Wood Apple (Bael Fruit)',
-    'Yellow Passion Fruit',
-    'Yuzu',
-  ];
-
-  return Padding(
-    padding: EdgeInsets.only(bottom: height! * 0.025),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Text(
-          "1.",
-          style: GoogleFonts.poppins(fontSize: height! * 0.025, fontWeight: FontWeight.w400),
-        ),
-        dropdown(indianFruits, "Fruits", width! * 2.5),
-        dropdown(indianHealthyDishes, "Medicine", width! * 2.5),
-      ],
-    ),
-  );
-}
-
-Widget MedicineBlockTitle(double height, double width) {
-  return Padding(
-    padding: EdgeInsets.only(bottom: height * 0.025),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: width * 0.065,
-        ),
-        InkWell(
-          onTap: () {},
-          child: Container(
-            alignment: Alignment.center,
-            height: height * 0.05,
-            width: width * 0.1,
-            decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(50)),
-            child: Text(
-              " Previous Diet ",
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontSize: width * 0.008,
+  Widget MedicineBlockTitle(double height, double width,BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: height * 0.025),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+SizedBox(),
+          InkWell(
+            onTap: () {
+              showPreviousMedicines(height,width,context);
+            },
+            child: Container(
+              alignment: Alignment.center,
+              height: height * 0.05,
+              width: width * 0.1,
+              decoration: BoxDecoration(
+                  color: Colors.red, borderRadius: BorderRadius.circular(50)),
+              child: Text(
+                " Previous What to Eat ",
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: width * 0.008,
+                ),
               ),
             ),
           ),
-        ),
-        SizedBox(
-          width: width * 0.1,
-        ),
-        Text(
-          "Fruits",
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: width * 0.02,
+          Text(
+            "What to Eat",
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+              fontSize: width * 0.02,
+            ),
           ),
-        ),
-        SizedBox(
-          width: width * 0.3,
-        ),
-        Text(
-          "Diets",
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: width * 0.02,
+
+          Text(
+            "What to Avoid",
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+              fontSize: width * 0.02,
+            ),
           ),
-        ),
-      ],
-    ),
-  );
+          InkWell(
+            onTap: () {
+              showPreviousWhatToAvoid(height,width,context);
+            },
+            child: Container(
+              alignment: Alignment.center,
+              height: height * 0.05,
+              width: width * 0.1,
+              decoration: BoxDecoration(
+                  color: Colors.red, borderRadius: BorderRadius.circular(50)),
+              child: Text(
+                " Previous What to Avoid ",
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: width * 0.008,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(),
+        ],
+      ),
+    );
+  }
+
+  Widget MedicineBlock(double? height, double? width, int index) {
+    final controller = Get.put(PrescriptionController());
+    final userController = Get.put(UserData());
+    List<String> healthyFoods = [
+      // Vegetables
+      "Spinach",
+      "Broccoli",
+      "Carrots",
+      "Cauliflower",
+      "Bitter gourd",
+      "Bottle gourd",
+      "Drumstick (Moringa)",
+      "Bell peppers",
+      "Tomatoes",
+      "Pumpkin",
+      "Green beans",
+      "Beetroot",
+      "Okra (Ladyfinger)",
+
+      // Fruits
+      "Apples",
+      "Bananas",
+      "Oranges",
+      "Papayas",
+      "Mangoes",
+      "Pomegranates",
+      "Guavas",
+      "Grapes",
+      "Pineapple",
+      "Watermelon",
+      "Strawberries",
+      "Kiwi",
+
+      // Legumes and Pulses
+      "Lentils (Masoor dal)",
+      "Chickpeas (Chana)",
+      "Green gram (Moong dal)",
+      "Black gram (Urad dal)",
+      "Pigeon peas (Toor dal)",
+      "Kidney beans (Rajma)",
+      "Soybeans",
+      "Black-eyed peas (Lobia)",
+
+      // Grains
+      "Brown rice",
+      "Quinoa",
+      "Millet (Ragi, Bajra)",
+      "Whole wheat",
+      "Oats",
+      "Barley",
+      "Buckwheat",
+
+      // Nuts and Seeds
+      "Almonds",
+      "Walnuts",
+      "Flax seeds",
+      "Chia seeds",
+      "Sunflower seeds",
+      "Pumpkin seeds",
+      "Cashews",
+      "Pistachios",
+
+      // Dairy Products
+      "Yogurt (Dahi)",
+      "Paneer (Cottage cheese)",
+      "Buttermilk (Chaas)",
+      "Ghee (Clarified butter)",
+      "Milk",
+
+      // Spices and Herbs
+      "Turmeric",
+      "Cumin",
+      "Coriander",
+      "Ginger",
+      "Garlic",
+      "Basil",
+      "Mint",
+      "Fenugreek",
+      "Cinnamon",
+      "Cardamom",
+      "Cloves",
+      "Black pepper",
+      "Mustard seeds",
+      "Saffron",
+
+      // Fish and Seafood
+      "Salmon",
+      "Mackerel",
+      "Sardines",
+      "Prawns",
+      "Rohu",
+      "Hilsa",
+
+      // Lean Meats
+      "Chicken breast",
+      "Turkey",
+      "Lean cuts of lamb",
+
+      // Healthy Oils
+      "Coconut oil",
+      "Olive oil",
+      "Mustard oil",
+      "Sesame oil",
+
+      // Beverages
+      "Green tea",
+      "Herbal teas",
+      "Coconut water",
+
+      // Others
+      "Honey",
+      "Jaggery",
+      "Amla (Indian gooseberry)",
+      "Tur dal",
+      "Split peas"
+    ];
+    controller.presWhatToEat[index].id  = userController.userModel.value.id;
+    controller.presWhatToAvoid[index].id  = userController.userModel.value.id;
+    return Padding(
+      padding: EdgeInsets.only(bottom: height! * 0.025),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text(
+            (index + 1).toString(),
+            style: GoogleFonts.poppins(
+                fontSize: height * 0.025, fontWeight: FontWeight.w400),
+          ),
+          dropdownWhatToEat(healthyFoods, "Eat", width! * 2.1, index),
+          IconButton(onPressed: () {
+            controller.presWhatToEat.removeAt(index);
+          }, icon: Icon(Icons.delete, color: Colors.red,)),
+          dropdownWhatToAvoid(healthyFoods, "Avoid",  width* 2.1, index),
+          IconButton(onPressed: () {
+            controller.presWhatToAvoid.removeAt(index);
+          }, icon: Icon(Icons.delete, color: Colors.red,))
+        ],
+      ),
+    );
+  }
 }
+
+

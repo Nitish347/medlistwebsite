@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
 final controller = Get.put(UserData());
 @override
   void initState() {
-    controller.getAppointmnet();
+    controller.getAppointment();
     // TODO: implement initState
     super.initState();
   }

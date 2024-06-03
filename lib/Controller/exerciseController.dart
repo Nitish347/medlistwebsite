@@ -9,20 +9,19 @@ import 'package:medlistweb/Controller/NetworkHandler.dart';
 import 'package:medlistweb/Pages/home.dart';
 import 'package:medlistweb/constants/constants.dart';
 import 'package:medlistweb/models/UserModel.dart';
+import 'package:medlistweb/models/exerscise_post_model.dart';
 
 import '../models/MedicineModel.dart';
 import 'SigninController.dart';
 
-class MedicineController extends GetxController {
-  postMedicines(MedicineModel medicineModel) async {
-    if (medicineModel.medicineName != null) {
-      final url = Uri.parse('https://medlist-shivikatyagi.onrender.com/addingMedicines');
+class ExerciseController extends GetxController {
+  postExercise(ExersisePostModel exersisePostModel) async {
+    if (exersisePostModel.description != null) {
+      final url = Uri.parse('https://medlist-shivikatyagi.onrender.com/addingExercises');
       final Map<String, dynamic> body = {
-        "id": medicineModel.id,
-        "MedicineName": medicineModel.medicineName,
-        "TimeTaken":  medicineModel.timeTaken.toString(),
-        "MealTime": medicineModel.medicineName,
-        "Picture": "kasjkfdkmscdn"
+        "id":exersisePostModel.id,
+        "Description": exersisePostModel.description,
+        "TimeTaken": exersisePostModel.timeTaken.toString()
       };
       final response = await http.post(
         url,
@@ -35,10 +34,10 @@ class MedicineController extends GetxController {
       );
 
       if (response.statusCode == 201) {
-        print('Medicine data posted successfully!');
+        print('Exercise data posted successfully!');
         print(response.body);
       } else {
-        print('Failed to post medicine data. Status code: ${response.statusCode}');
+        print('Failed to post exercise data. Status code: ${response.statusCode}');
       }
     } else {
       log('null value');

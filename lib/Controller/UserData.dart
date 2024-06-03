@@ -49,14 +49,14 @@ class UserData extends GetxController {
 
   // ****************************************GET APPOINTMENTS*******************************************************
 
-  getAppointmnet()async{
+  getAppointment()async{
     appointmentList.clear();
     var token = await SigningController.getToken();
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token'
+              'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1YTFkNTQ0Y2I4NjExZDRmNmE2Y2EiLCJpYXQiOjE3MTYxMDgzNzF9.QI3S_XfpQCsZ_oFNL9XYN-DYk39Pk5QT_IjekuypDqI'
     };
-    var request = http.Request('GET', Uri.parse('https://medlist-shivikatyagi.onrender.com/appointment/left?date=24-03-2002'));
+    var request = http.Request('GET', Uri.parse('https://medlist-shivikatyagi.onrender.com/appointment/left?date=04-06-2024'));
 
     request.headers.addAll(headers);
 
@@ -65,7 +65,7 @@ class UserData extends GetxController {
     if (response.statusCode == 200) {
       var data = await response.stream.bytesToString();
       var appointments = json.decode(data.toString());
-      log(appointments.toString());
+      log("---------->>>>>>>>>>"+appointments.toString());
       for( var i in appointments){
         AppointmentModel appointmentModel = AppointmentModel.fromJson(i);
         appointmentList.add(appointmentModel);

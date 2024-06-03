@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 import '../Controller/prescriptionController.dart';
 
@@ -54,10 +55,11 @@ Widget dropdownMedicine(
 }
 // *************************************************MEDICINE TIME*******************************************************************
 
+List<String> timing = [ "Morning", "Evening", "Night"];
 Widget dropdownMedicineTime(
     List<String> options, String hint, double width, int index,
     [bool grey = true]) {
-
+  final DateFormat formatter = DateFormat('yyyy-MM-ddTHH:mm:ss');
   final controller = Get.put(PrescriptionController());
   return Container(
     width: width * 0.14,
@@ -91,7 +93,13 @@ Widget dropdownMedicineTime(
         style: GoogleFonts.poppins(color: Colors.green),
       ),
       onSelected: (String? value) {
-        controller.prescribeMedicine[index].timeTaken = DateTime.now();
+        if(value=="Morning" ){
+          controller.prescribeMedicine[index].timeTaken =  formatter.parse("2040-10-28T08:00:00");
+        }else if(value == "Evening"){
+          controller.prescribeMedicine[index].timeTaken =  formatter.parse("2040-10-28T13:00:00");
+        }else{
+          controller.prescribeMedicine[index].timeTaken =  formatter.parse("2040-10-28T22:00:00");
+        }
       },
       dropdownMenuEntries:
       options.map<DropdownMenuEntry<String>>((String value) {

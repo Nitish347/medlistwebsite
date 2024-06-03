@@ -29,7 +29,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
       _loadingUser = true;
     });
     await controller.getUser();
-    await controller.getAppointmnet();
+    await controller.getAppointment();
     await controller.getAppointmnetDone();
     setState(() {
       _loadingUser = false;

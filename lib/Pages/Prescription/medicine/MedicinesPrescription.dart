@@ -4,6 +4,7 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:medlistweb/Controller/UserData.dart';
 import 'package:medlistweb/Controller/medicineController.dart';
@@ -23,7 +24,7 @@ class MedicinePrescription extends StatefulWidget {
   @override
   State<MedicinePrescription> createState() => _MedicinePrescriptionState();
 }
-
+bool _loading = false;
 class _MedicinePrescriptionState extends State<MedicinePrescription> {
 
   @override
@@ -81,7 +82,7 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
   }
   final prescriptionController = Get.put(PrescriptionController());
   final medicineController = Get.put(MedicineController());
-  bool _loading = false;
+
   @override
   Widget build(BuildContext context) {
     showPatientsDetail(double height, double widht) {
@@ -217,9 +218,9 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
                                     .prescribeMedicine) {
                                   i.id = widget.appointmentModel.id;
                                   medicineController.postMedicines(i);
-                                  log(i.medicineName ?? "null");
-                                  // log(i.timeTaken ?? "null");
-                                  log(i.id ?? "null");
+                                  // log(i.medicineName ?? "null");
+                                  // // log(i.timeTaken ?? "null");
+                                  // log(i.id ?? "null");
 
                                 }
                                 setState(() {
@@ -233,7 +234,7 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
                                 decoration: BoxDecoration(
                                     color: Colors.green,
                                     borderRadius: BorderRadius.circular(50)),
-                                child: Text(
+                                child: _loading ? CircularProgressIndicator() :  Text(
                                   "Save",
                                   style: GoogleFonts.poppins(
                                     color: Colors.white,
@@ -330,7 +331,35 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
   }
 
   Widget MedicineBlock(double? height, double? width, int index) {
+    TimeOfDay _selectedTime = TimeOfDay.now();
+    DateTime _selectedDateTime = DateTime.now();
     final controller = Get.put(PrescriptionController());
+    final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+    Future<void> _selectTime(BuildContext context) async {
+      final TimeOfDay? picked = await showTimePicker(
+        context: context,
+        initialTime: _selectedTime,
+
+      );
+      if (picked != null && picked != _selectedTime) {
+        setState(() {
+          print(picked.toString());
+          _selectedTime = picked;
+          _selectedDateTime = DateTime(
+            _selectedDateTime.year,
+            _selectedDateTime.month,
+            _selectedDateTime.day,
+            _selectedTime.hour,
+            _selectedTime.minute,
+          );
+       print(formatter.parse(_selectedDateTime.toString()));
+          controller.prescribeMedicine[index].timeTaken = formatter.parse(_selectedDateTime.toString());
+        });
+      }
+
+    }
+
+
     final userController = Get.put(UserData());
     List<String> timing = [ "Morning", "Evening", "Night"];
     List<String> amount = [ "0.5", "1", "1.5", "2", "3", "4", "5"];
@@ -399,7 +428,15 @@ class _MedicinePrescriptionState extends State<MedicinePrescription> {
                 fontSize: height * 0.025, fontWeight: FontWeight.w400),
           ),
           dropdownMedicine(medicineNames, "Medicine", width! * 2.1, index),
-          dropdownMedicineTime(timing, "Time", width, index),
+          Row(
+            children: [
+              dropdownMedicineTime(timing, "Time", width, index),
+              IconButton(onPressed: (){
+                _selectTime(context);
+
+              }, icon: Icon(Icons.calendar_month))
+            ],
+          ),
           dropdownMedicineMealTime(meal, "Meal", width * 1.5, index),
           dropdownMedicineAmount(amount, "Amount", width, index),
           IconButton(onPressed: () {

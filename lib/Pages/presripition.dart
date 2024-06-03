@@ -23,7 +23,8 @@ class _PrescriptionScreenState extends State<PrescriptionScreen> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    List tabs = [MedicinePrescription(appointmentModel: widget.appointmentModel), DietPrescription(), ExerciesPrescription()];
+    List tabs = [MedicinePrescription(appointmentModel: widget.appointmentModel), DietPrescription(appointmentModel: widget.appointmentModel,), ExercisePrescription(appointmentModel: widget.appointmentModel,
+    )];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,

@@ -11,18 +11,48 @@ import 'package:medlistweb/constants/constants.dart';
 import 'package:medlistweb/models/UserModel.dart';
 
 import '../models/MedicineModel.dart';
+import '../models/eat_model.dart';
 import 'SigninController.dart';
 
-class MedicineController extends GetxController {
-  postMedicines(MedicineModel medicineModel) async {
-    if (medicineModel.medicineName != null) {
-      final url = Uri.parse('https://medlist-shivikatyagi.onrender.com/addingMedicines');
+class DietController extends GetxController {
+  postWhatToEat(Eat eat) async {
+    if (eat.d != null) {
+      final url = Uri.parse('https://medlist-shivikatyagi.onrender.com/addingWhatToEat');
       final Map<String, dynamic> body = {
-        "id": medicineModel.id,
-        "MedicineName": medicineModel.medicineName,
-        "TimeTaken":  medicineModel.timeTaken.toString(),
-        "MealTime": medicineModel.medicineName,
-        "Picture": "kasjkfdkmscdn"
+
+          "id":eat.id,
+          "FoodItem": eat.d
+
+      };
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $authToken'
+
+        },
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 201) {
+        log('Medicine data posted successfully!');
+        log(response.body);
+      } else {
+        log('Failed to post medicine data. Status code: ${response.statusCode}');
+      }
+    } else {
+      log('null value');
+
+  }
+    }
+  postWhatToAvoid(Eat eat) async {
+    if (eat.d != null) {
+      final url = Uri.parse('https://medlist-shivikatyagi.onrender.com/addingWhatNotToEat');
+      final Map<String, dynamic> body = {
+
+        "id":eat.id,
+        "FoodItem": eat.d
+
       };
       final response = await http.post(
         url,
@@ -42,6 +72,7 @@ class MedicineController extends GetxController {
       }
     } else {
       log('null value');
+
     }
   }
 
